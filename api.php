@@ -1,8 +1,5 @@
 <?php
-
-//soundmanager2 pro přehravani hudby http://www.schillmania.com/projects/soundmanager2/
 //react pro front-end https://tutorialzine.com/2014/07/5-practical-examples-for-learning-facebooks-react-framework
-
 $conn = mysqli_connect('localhost','root','root','api')  or die(mysql_error());
 
 function get_all_songs()
