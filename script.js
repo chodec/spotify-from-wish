@@ -4,33 +4,45 @@ var urlSongInfo = "http://localhost/apicko/api.php?action=get_song_info&song=";
 var urlGetAllSongs = "http://localhost/apicko/api.php?action=get_all_songs";
 
 $(document).ready(function(){
-  displayAuthorSongs();
-  displayAuthor()
+  displayFunction();
 });
 
-function displayAuthor(){
-  $( "#neco" ).click(function( event ){
-    event.preventDefault();
+function displayFunction()
+{
+  $( "#neco" ).click(function(){
     $.getJSON(urlAuthor,function(json){
-      $( "#neco" ).hide( "slow" );
+      $( "#display" ).empty();
       $.each(json, function(i, item){
-        $( "#display" ).append('<a href="#" class="authorClass" id="' + json[i].name + '">' + json[i].real_name + '</a>');
+        $( "#display" ).append('<span  class="authorClass" id="' + json[i].name + '">' + json[i].real_name + '</span>');
         $( "#display" ).append( "<br>" );
+      });
+      $( ".authorClass" ).click(function(){
+        urlAuthorSongs += $(this).attr( "id" );
+        displayAuthorSongs();
       });
     });
   });
 }
 
 function displayAuthorSongs(){
-  $( "#tfk" ).click(function( event ){
-    event.preventDefault();
-    $( "#tfk" ).hide( "slow" );
-    urlAuthorSong += $(this).attr( "id" );
-    $.getJSON(urlAuthorSong,function(json){
-      $.each(json, function(i, item){
-        $( "#display" ).append('<a href="#">' + json[i].real_name + '</a>');
-        $( "#display" ).append( "<br>" );
-      });
+  $( "#display" ).empty();
+  $.getJSON(urlAuthorSongs,function(json){
+    $.each(json, function(i, item){
+      $( "#display" ).append('<span class="authorSongClass" id="' + json[i].name + '">' + json[i].real_name + '</a>');
+      $( "#display" ).append( "<br>" );
+    });
+    $( ".authorSongClass").click(function(){
+      urlSongInfo += $(this).attr( "id" );
+      displaySong();
+    });
+  });
+}
+function displaySong()
+{
+  $( "#display" ).empty();
+  $.getJSON(urlSongInfo,function(json){
+    $.each(json, function(i, item){
+      $( "#display" ).append('<span class="songClass" id="' + json[i].name + '">' + json[i].real_name + '<br>' +  json[i].real_author + '</a>');
     });
   });
 }
