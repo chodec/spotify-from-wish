@@ -1,5 +1,5 @@
 body{
-  background-color: #0066cc;
+  background-color: #666633;
   color: #e6e6e6;
 }
 a{
@@ -20,5 +20,8 @@ h1{
 .song_box{
   text-align: center;
   background-color: black;
-  color:black;
+  color:white;
+}
+.jumbotron{
+  background-color: #442222;
 }
