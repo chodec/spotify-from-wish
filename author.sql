@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Dec 04, 2017 at 05:21 PM
+-- Generation Time: Jan 08, 2018 at 06:48 PM
 -- Server version: 5.7.11
 -- PHP Version: 7.0.3
 
@@ -19,6 +19,31 @@ SET time_zone = "+00:00";
 --
 -- Database: `api`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `albums`
+--
+
+CREATE TABLE `albums` (
+  `id` int(40) NOT NULL,
+  `name` varchar(250) COLLATE utf8_czech_ci NOT NULL,
+  `real_name` varchar(250) COLLATE utf8_czech_ci NOT NULL,
+  `id_author` int(40) NOT NULL,
+  `author` varchar(250) COLLATE utf8_czech_ci NOT NULL,
+  `real_author` varchar(250) COLLATE utf8_czech_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
+
+--
+-- Dumping data for table `albums`
+--
+
+INSERT INTO `albums` (`id`, `name`, `real_name`, `id_author`, `author`, `real_author`) VALUES
+(1, 'the_art_of_breaking', 'The Art of Breaking', 1, 'tfk', 'Thousand foot krutch'),
+(2, 'one-x', 'One-X', 2, 'tdg', 'Three days Grace'),
+(3, 'asylum', 'Asylum', 3, 'distubed', 'Disturbed'),
+(4, 'worlds_collide', 'Worlds Collide', 4, 'apocalyptica', 'Apocalyptica');
 
 -- --------------------------------------------------------
 
@@ -54,19 +79,22 @@ CREATE TABLE `songs` (
   `real_name` varchar(40) COLLATE utf8_czech_ci NOT NULL,
   `author` varchar(20) COLLATE utf8_czech_ci NOT NULL,
   `real_author` varchar(40) COLLATE utf8_czech_ci NOT NULL,
-  `id_author` int(44) NOT NULL
+  `id_author` int(44) NOT NULL,
+  `album` varchar(250) COLLATE utf8_czech_ci NOT NULL,
+  `real_album` varchar(250) COLLATE utf8_czech_ci NOT NULL,
+  `id_album` int(40) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 
 --
 -- Dumping data for table `songs`
 --
 
-INSERT INTO `songs` (`id_song`, `name`, `real_name`, `author`, `real_author`, `id_author`) VALUES
-(1, 'absolute', 'Absolute', 'tfk', 'Thousand foot krutch', 1),
-(2, 'riot', 'Riot', 'tdg', 'Three days Grace', 2),
-(3, 'hand_granade', 'Hand Granade', 'tfk', 'Thousand foot krutch', 1),
-(4, 'warrior', 'Warrior', 'disturbed', 'Disturbed', 3),
-(5, 'im_not_jesus', 'I\'m not Jesus', 'apocalyptica', 'Apocalyptica', 4);
+INSERT INTO `songs` (`id_song`, `name`, `real_name`, `author`, `real_author`, `id_author`, `album`, `real_album`, `id_album`) VALUES
+(1, 'absolute', 'Absolute', 'tfk', 'Thousand foot krutch', 1, 'the_art_of_breaking', 'The Art of Breaking', 1),
+(2, 'riot', 'Riot', 'tdg', 'Three days Grace', 2, 'one-x', 'One-X', 2),
+(3, 'hand_granade', 'Hand Granade', 'tfk', 'Thousand foot krutch', 1, 'the_art_of_breaking', 'The Art of Breaking', 1),
+(4, 'warrior', 'Warrior', 'disturbed', 'Disturbed', 3, 'asylum', 'Asylum', 3),
+(5, 'im_not_jesus', 'I\'m not Jesus', 'apocalyptica', 'Apocalyptica', 4, 'worlds_collide', 'Worlds Collide', 4);
 
 --
 -- Indexes for dumped tables
