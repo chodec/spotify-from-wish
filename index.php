@@ -10,14 +10,15 @@
 <body>
 
   <div class="jumbotron">
-    <h1>"audio streamer"<h1>
+    <h1 id="takeMeBack">"audio streamer"<h1>
     </div>
     <div class="container">
       <div id="display">
-         <h3 id="neco"> Authors </h3> <br>
+        <h3 id="h3author"> Interpreti </h3>
+        <h3 id="h3album"> Alba </h3>
+        <h3 id="h3song"> Písničky </h3>
       </div>
     </div>
 
   </body>
   </html>
-
