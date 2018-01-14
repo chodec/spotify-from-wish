@@ -5,17 +5,22 @@ var urlAllSongs = "http://localhost/apicko/api.php?action=get_all_songs";
 var urlAlbum = "http://localhost/apicko/api.php?action=get_album";
 var urlAlbumSongs = "http://localhost/apicko/api.php?action=get_album_songs&album=";
 var urlAuthorAlbums = "http://localhost/apicko/api.php?action=get_author_albums&author=";
+var tmpUrlAuthor = "";
+var tmpUrlAuthorSongs = "";
+var tmpUrlSongInfo = "";
+var tmpUrlAllSongs = "";
+var tmpUrlAlbum = "";
+var tmpUrlAlbumSongs = "";
+var tmpUrlAuthorAlbums = "";
 
 $(document).ready(function(){
   displayFunction();
-  displayAlbum();
-  displaySongs();
   $( "#takeMeBack" ).click(function(){
     takeMeBack();
   });
 });
 
-function displayFunction()
+function displayAuthor()
 {
   $( "#h3author" ).click(function(){
     $.getJSON(urlAuthor,function(json){
@@ -25,8 +30,8 @@ function displayFunction()
         $( "#display" ).append( "<br>" );
       });
       $( ".authorClass" ).click(function(){
-        urlAuthorSongs += $(this).attr( "id" );
-        urlAuthorAlbums += $(this).attr( "id" );
+        tmpUrlAuthorSongs += $(this).attr( "id" );
+        tmpUrlAuthorAlbums += $(this).attr( "id" );
         displayAuthorSongsAndAlbums();
       });
     });
@@ -35,23 +40,25 @@ function displayFunction()
 
 function displayAuthorSongsAndAlbums(){
   $( "#display" ).empty();
-  $.getJSON(urlAuthorAlbums,function(json){
+  $.getJSON(urlAuthorAlbums + tmpUrlAuthorAlbums,function(json){
     $( "#display" ).append('<h3> Albumy </h3> ');
+    tmpUrlAuthorAlbums = "";
     $.each(json, function(i, item){
       $( "#display" ).append('<span class="albumClass" id="' + json[i].name + '">' + json[i].real_name + '</span>');
       $( "#display" ).append( "<br>" );
     });
   });
 
-  $.getJSON(urlAuthorSongs,function(json){
+  $.getJSON(urlAuthorSongs + tmpUrlAuthorSongs,function(json){
     $( "#display" ).append('<h3> Písničky </h3> ');
+    tmpUrlAuthorSongs = "";
     $.each(json, function(i, item){
       $( "#display" ).append('<span class="authorSongClass" id="' + json[i].name + '">' + json[i].real_name + '</span>');
       $( "#display" ).append( "<br>" );
     });
 
     $( ".authorSongClass").click(function(){
-      urlSongInfo += $(this).attr( "id" );
+      tmpUrlSongInfo += $(this).attr( "id" );
       displaySong();
     });
   });
@@ -59,19 +66,12 @@ function displayAuthorSongsAndAlbums(){
 function displaySong()
 {
   $( "#display" ).empty();
-  $.getJSON(urlSongInfo,function(json){
+  $.getJSON(urlSongInfo + tmpUrlSongInfo,function(json){
     $.each(json, function(i, item){
+      tmpUrlSongInfo = "";
       $( "#display" ).append('<span class="songClass" id="' + json[i].name + '">' + json[i].real_name + '<br>' +  json[i].real_author + '</span>');
     });
   });
-}
-
-function takeMeBack()
-{
-  $( "#display" ).empty();
-  $( "#display" ).append('<h3 id="h3author"> Interpreti </h3>');
-  $( "#display" ).append('<h3 id="h3album"> Alba </h3>');
-  $( "#display" ).append('<h3 id="h3song"> Písničky </h3>');
 }
 
 function displayAlbum()
@@ -81,16 +81,16 @@ function displayAlbum()
       $( "#display" ).empty();
       $.each(json, function(i, item){
       $( "#display" ).append('<span  class="albumClass" id="' + json[i].name + '">' + json[i].real_name + '</span> <br>'+ "by: ");
-      $( "#display" ).append('<span  class="authorClass" id="' + json[i].author + '">' + json[i].real_author + '</span>' + '<br>');
+      $( "#display" ).append('<span  class="authorClass" >' + json[i].real_author + '</span>' + '<br>');
       $( "#display" ).append( "<br>" );
       });
       $( ".authorClass" ).click(function(){
-        urlAuthorSongs += $(this).attr( "id" );
-        urlAuthorAlbums += $(this).attr( "id" );
+        tmpUrlAuthorSongs += $(this).attr( "id" );
+        tmpUrlAuthorAlbums += $(this).attr( "id" );
         displayAuthorSongsAndAlbums();
       });
       $( ".albumClass" ).click(function(){
-        urlAlbumSongs += $(this).attr( "id" );
+        tmpUrlAlbumSongs += $(this).attr( "id" );
         displayAlbumSongs();
       });
     });
@@ -100,8 +100,10 @@ function displayAlbum()
 function displayAlbumSongs()
 {
    $( "#display" ).empty();
-   $.getJSON(urlAlbumSongs,function(json){
-     $.each(json, function(i, item){
+   alert(urlAlbumSongs + tmpUrlAlbumSongs);
+   $.getJSON(urlAlbumSongs + tmpUrlAlbumSongs,function(json){
+    tmpUrlAlbumSongs = "";
+    $.each(json, function(i, item){
        $("#display").append('<span class="songClass" id="' + json[i].name + '">' + json[i].real_name + '</span>' + '<br>');
      });
    });
@@ -117,4 +119,20 @@ function displaySongs()
       });
     });
   });
+}
+
+function takeMeBack()
+{
+  $( "#display" ).empty();
+  $( "#display" ).append('<h3 id="h3author"> Interpreti </h3>');
+  $( "#display" ).append('<h3 id="h3album"> Alba </h3>');
+  $( "#display" ).append('<h3 id="h3song"> Písničky </h3>');
+  displayFunction();
+}
+
+function displayFunction()
+{
+  displayAuthor();
+  displayAlbum();
+  displaySongs();
 }
