@@ -13,7 +13,13 @@ var tmpUrlAlbum = "";
 var tmpUrlAlbumSongs = "";
 var tmpUrlAuthorAlbums = "";
 
+var playtime = "";
+var currentSong = "";
+var currentAuthor = "";
+var currentImg = "";
+
 $(document).ready(function(){
+  $( ".footer" ).hide();
   displayFunction();
   $( "#takeMeBack" ).click(function(){
     takeMeBack();
@@ -27,9 +33,7 @@ function displayAuthor()
       $( "#display" ).empty();
       $( "#display" ).append('<div class="row">');
       $.each(json, function(i, item){
-        $( ".row" ).append( '<div class="col-sm">');
-        $( ".row" ).append('<span  class="authorClass" id="' + json[i].name + '">' + json[i].real_name + '</span>');
-        $( ".row" ).append( '</div>');
+        $( ".row" ).append('<div class="col-md"> <span  class="authorClass" id="' + json[i].name + '">' + json[i].real_name + '</span> </div>');
       });
       $( ".authorClass" ).click(function(){
         tmpUrlAuthorSongs += $(this).attr( "id" );
@@ -43,10 +47,13 @@ function displayAuthor()
 function displayAuthorSongsAndAlbums(){
   $( "#display" ).empty();
 
+  $( "#display" ).append('<div class="row">');
+  $( ".row" ).append('<div class="col-md-6 albumRowClass">');
+  $( ".row" ).append('<div class="col-md-6 songRowClass">');
+  $( ".albumRowClass" ).append('<h3> Albumy </h3> ');
+  $( ".songRowClass" ).append('<h3> Písničky </h3> ');
+
   $.getJSON(urlAuthorAlbums + tmpUrlAuthorAlbums,function(json){
-    $( "#display" ).append('<div class="row rowAlbum">');
-    $( ".rowAlbum" ).append('<div class="col-sm albumRowClass">');
-    $( ".albumRowClass" ).append('<h3> Albumy </h3> ');
     tmpUrlAuthorAlbums = "";
     $.each(json, function(i, item){
       $( ".albumRowClass" ).append('<span class="albumClass" id="' + json[i].name + '">' + json[i].real_name + '</span>');
@@ -59,29 +66,47 @@ function displayAuthorSongsAndAlbums(){
   });
 
   $.getJSON(urlAuthorSongs + tmpUrlAuthorSongs,function(json){
-    $( "#display" ).append('<div class="row rowSong">');
-    $( ".rowSong" ).append('<div class="col-sm songRowClass">');
-    $( ".songRowClass" ).append('<h3> Písničky </h3> ');
     tmpUrlAuthorSongs = "";
     $.each(json, function(i, item){
       $( ".songRowClass" ).append('<span class="authorSongClass" id="' + json[i].name + '">' + json[i].real_name + '</span>');
       $( ".songRowClass" ).append( "<br>" );
     });
-
     $( ".authorSongClass").click(function(){
       tmpUrlSongInfo += $(this).attr( "id" );
       displaySong();
     });
   });
 }
+
 function displaySong()
 {
   $( "#display" ).empty();
+  $( "#display" ).append('<div class="setCenter">');
+  $( ".setCenter" ).append('<img src="../apicko/img/photo.png" class="imgClass"> <br>');
+
   $.getJSON(urlSongInfo + tmpUrlSongInfo,function(json){
     $.each(json, function(i, item){
       tmpUrlSongInfo = "";
-      $( "#display" ).append('<span class="songClass" id="' + json[i].name + '">' + json[i].real_name + '<br>' +  json[i].real_author + '</span>');
+      playtime = json[i].name + '.mp3';
+      currentSong = json[i].real_name;
+      currentAuthor = json[i].real_author;
+      $( ".setCenter" ).append('<span class="songClassic" id="' + json[i].name + '">' +
+      json[i].real_name + '<br>' +  json[i].real_author + '</span>');
     });
+
+    var sound = new Howl({
+      src: ['../apicko/music/' + playtime],
+      volume: 0.1,
+    });
+
+      displayFooter();
+      
+      $( ".fa-pause" ).click(function(){
+        sound.pause();
+      });
+      $( ".fa-play" ).click(function(){
+        sound.play();
+      });
   });
 }
 
@@ -90,10 +115,10 @@ function displayAlbum()
   $( "#h3album" ).click(function(){
     $.getJSON(urlAlbum,function(json){
       $( "#display" ).empty();
+      $( "#display" ).append('<div class="row">');
       $.each(json, function(i, item){
-      $( "#display" ).append('<span  class="albumClass" id="' + json[i].name + '">' + json[i].real_name + '</span> <br>'+ "by: ");
-      $( "#display" ).append('<span  class="authorClass" >' + json[i].real_author + '</span>' + '<br>');
-      $( "#display" ).append( "<br>" );
+        $( ".row" ).append('<div class="col-md"><span  class="albumClass" id="' + json[i].name + '">' +
+        json[i].real_name + '</span> <br> by <span  class="authorClass" >' + json[i].real_author + '</span> </div>');
       });
       $( ".authorClass" ).click(function(){
         tmpUrlAuthorSongs += $(this).attr( "id" );
@@ -110,26 +135,27 @@ function displayAlbum()
 
 function displayAlbumSongs()
 {
-   $( "#display" ).empty();
-   $.getJSON(urlAlbumSongs + tmpUrlAlbumSongs,function(json){
+  $( "#display" ).empty();
+  $.getJSON(urlAlbumSongs + tmpUrlAlbumSongs,function(json){
     tmpUrlAlbumSongs = "";
     $.each(json, function(i, item){
-       $("#display").append('<span class="songClass" id="' + json[i].name + '">' + json[i].real_name + '</span>' + '<br>');
-     });
-     $( ".songClass" ).click(function(){
-       tmpUrlSongInfo = $(this).attr( "id" );
-       displaySong();
-     });
-   });
+      $("#display").append('<span class="songClass" id="' + json[i].name + '">' + json[i].real_name + '</span>' + '<br>');
+    });
+    $( ".songClass" ).click(function(){
+      tmpUrlSongInfo = $(this).attr( "id" );
+      displaySong();
+    });
+  });
 }
 
 function displaySongs()
 {
   $( "#h3song" ).click(function(){
     $.getJSON(urlAllSongs,function(json){
-      $("#display").empty();
+      $( "#display" ).empty();
+      $("#display").append('<div class="row">');
       $.each(json,function(i, item){
-        $("#display").append('<span class="songClass" id="'+ json[i].name + '">' + json[i].real_name + '</span>' + '<br>')
+        $( ".row" ).append('<div class="col-md"><span class="songClass" id="'+ json[i].name + '">' + json[i].real_name + '</span> </div>')
       });
       $( ".songClass" ).click(function(){
         tmpUrlSongInfo = $(this).attr( "id" );
@@ -142,10 +168,24 @@ function displaySongs()
 function takeMeBack()
 {
   $( "#display" ).empty();
-  $( "#display" ).append('<h3 id="h3author"> Interpreti </h3>');
-  $( "#display" ).append('<h3 id="h3album"> Alba </h3>');
-  $( "#display" ).append('<h3 id="h3song"> Písničky </h3>');
+
+  $( "#display" ).append('<div class="row">');
+  $( ".row" ).append('<div class="col-md first">');
+  $( ".first" ).append('<span id="h3author"> Interpreti </span>');
+  $( ".row" ).append('<div class="col-md second">');
+  $( ".second" ).append('<span id="h3album"> Alba </span>');
+  $( ".row" ).append('<div class="col-md third">');
+  $( ".third" ).append('<span id="h3song"> Písničky </span>');
+
   displayFunction();
+}
+function displayFooter(){
+  $( ".songClassic" ).click(function(){
+      $( ".footer" ).fadeIn(3000);
+      $( ".col-md" ).remove();
+      $( ".songName" ).text(currentSong);
+      $( ".songAuthor" ).text('by ' + currentAuthor);
+      });
 }
 
 function displayFunction()
