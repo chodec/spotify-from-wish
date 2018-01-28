@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Jan 08, 2018 at 06:48 PM
+-- Generation Time: Jan 28, 2018 at 09:35 PM
 -- Server version: 5.7.11
 -- PHP Version: 7.0.3
 
@@ -42,7 +42,7 @@ CREATE TABLE `albums` (
 INSERT INTO `albums` (`id`, `name`, `real_name`, `id_author`, `author`, `real_author`) VALUES
 (1, 'the_art_of_breaking', 'The Art of Breaking', 1, 'tfk', 'Thousand foot krutch'),
 (2, 'one-x', 'One-X', 2, 'tdg', 'Three days Grace'),
-(3, 'asylum', 'Asylum', 3, 'distubed', 'Disturbed'),
+(3, 'asylum', 'Asylum', 3, 'disturbed', 'Disturbed'),
 (4, 'worlds_collide', 'Worlds Collide', 4, 'apocalyptica', 'Apocalyptica');
 
 -- --------------------------------------------------------
@@ -99,6 +99,18 @@ INSERT INTO `songs` (`id_song`, `name`, `real_name`, `author`, `real_author`, `i
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `albums`
+--
+ALTER TABLE `albums`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `author`
+--
+ALTER TABLE `author`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `songs`

@@ -56,7 +56,8 @@ h1{
   bottom: 0;
   background: rgba(128, 128, 128, 0.1);
   padding-top: 1%;
-  padding-left: 25%;
+  padding-left: 20%;
+  padding-right: 5%;
 }
 .img-responsive {
     display: block;
@@ -70,4 +71,10 @@ h1{
 }
 .songAuthor{
   font-style: italic;
+}
+.progress{
+  height: 1px;
+}
+.progress-bar{
+  color: #00ccff;
 }

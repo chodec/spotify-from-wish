@@ -14,22 +14,24 @@
 
   <div class="jumbotron">
     <h1 id="takeMeBack">"audio streamer"<h1>
-  </div>
+    </div>
     <div class="container">
       <div id="display">
-        <div class="row">
-          <div class="col-md">
-            <span id="h3author"> Interpreti </span>
-          </div>
-          <div class="col-md">
-            <span  id="h3album"> Alba </span>
-          </div>
-          <div class="col-md">
-            <span id="h3song"> Písničky </span>
+        <div class="displayMenu">
+          <div class="row">
+            <div class="col-md">
+              <span id="h3author"> Interpreti </span>
+            </div>
+            <div class="col-md">
+              <span  id="h3album"> Alba </span>
+            </div>
+            <div class="col-md">
+              <span id="h3song"> Písničky </span>
+            </div>
           </div>
         </div>
+      </div>
     </div>
-  </div>
 
       <div class="footer">
         <div class="row">
@@ -41,6 +43,10 @@
             <br>
             <span class="fa fa-pause col-lg-1" aria-hidden="true"></span>
             <span class="fa fa-play col-lg-1" aria-hidden="true"></span>
+            <div class="progress">
+              <div class="progress-bar" role="progressbar" style="width: 5%; height: 1px;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+            <span id="time"> pozice </span>
           </div>
         </div>
       </div>
