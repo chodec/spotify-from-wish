@@ -18,7 +18,6 @@ var currentSong = "";
 var currentAuthor = "";
 var currentImg = "";
 
-var pos = 0;
 
 $(document).ready(function(){
   $( ".footer" ).hide();
@@ -26,6 +25,7 @@ $(document).ready(function(){
   $( "#takeMeBack" ).click(function(){
     takeMeBack();
   });
+
 });
 
 function displayAuthor()
@@ -94,23 +94,11 @@ function displaySong()
       $( ".setCenter" ).append('<span class="songClassic" id="' + json[i].name + '">' +
       json[i].real_name + '<br>' +  json[i].real_author + '</span>');
     });
-
-      displayFooter();
-      var sound = new Howl({
-        src: ['../apicko/music/' + playtime],
-        volume: 0.1,
-      });
-      pos = sound.seek() || 0;
-        if(sound.playing())
-        {
-        $( '#time' ).text(pos);
-        }
-        $( ".fa-pause" ).click(function(){
-          sound.pause();
-        });
-        $( ".fa-play" ).click(function(){
-          sound.play();
-        });
+    displayFooter();
+    $( ".songClassic" ).click(function(){
+      playSong(playtime);
+      window.sound.play();
+    });
   });
 }
 
@@ -186,11 +174,30 @@ function takeMeBack()
 }
 function displayFooter(){
   $( ".songClassic" ).click(function(){
-      $( ".footer" ).fadeIn(3000);
-      $( ".col-md" ).remove();
-      $( ".songName" ).text(currentSong);
-      $( ".songAuthor" ).text('by ' + currentAuthor);
-      });
+    $( ".footer" ).fadeIn(3000);
+    $( ".col-md" ).remove();
+    $( ".songName" ).text(currentSong);
+    $( ".songAuthor" ).text('by ' + currentAuthor);
+  });
+}
+
+function playSong(playtime)
+{
+  window.sound = new Howl({
+  src: ['../apicko/music/' + playtime],
+  volume: 0.1
+});
+
+  $( ".fa-pause" ).click(function(){
+    sound.pause();
+  });
+
+  $( ".fa-play" ).click(function(){
+    if(!sound.playing())
+    {
+      sound.play();
+    }
+  });
 }
 
 function displayFunction()
@@ -199,3 +206,4 @@ function displayFunction()
   displayAlbum();
   displaySongs();
 }
+
