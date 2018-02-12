@@ -13,11 +13,10 @@ var tmpUrlAlbum = "";
 var tmpUrlAlbumSongs = "";
 var tmpUrlAuthorAlbums = "";
 
-var playtime = "";
+var playtime = "default";
 var currentSong = "";
 var currentAuthor = "";
 var currentImg = "";
-
 
 $(document).ready(function(){
   $( ".footer" ).hide();
@@ -25,7 +24,6 @@ $(document).ready(function(){
   $( "#takeMeBack" ).click(function(){
     takeMeBack();
   });
-
 });
 
 function displayAuthor()
@@ -88,6 +86,7 @@ function displaySong()
   $.getJSON(urlSongInfo + tmpUrlSongInfo,function(json){
     $.each(json, function(i, item){
       tmpUrlSongInfo = "";
+      playtime = "";
       playtime = json[i].name + '.mp3';
       currentSong = json[i].real_name;
       currentAuthor = json[i].real_author;
@@ -97,7 +96,6 @@ function displaySong()
     displayFooter();
     $( ".songClassic" ).click(function(){
       playSong(playtime);
-      window.sound.play();
     });
   });
 }
@@ -175,7 +173,6 @@ function takeMeBack()
 function displayFooter(){
   $( ".songClassic" ).click(function(){
     $( ".footer" ).fadeIn(3000);
-    $( ".col-md" ).remove();
     $( ".songName" ).text(currentSong);
     $( ".songAuthor" ).text('by ' + currentAuthor);
   });
@@ -183,20 +180,42 @@ function displayFooter(){
 
 function playSong(playtime)
 {
-  window.sound = new Howl({
-  src: ['../apicko/music/' + playtime],
-  volume: 0.1
-});
 
-  $( ".fa-pause" ).click(function(){
-    sound.pause();
+  var sound = new Howl({
+    src: ['../apicko/music/' + playtime],
+    volume: 0.05,
+    onplay: function(){
+      playBtn.style.display = 'block';
+      pauseBtn.style.display = 'none';
+    },
+    onpause: function(){
+      playBtn.style.display = 'none';
+      pauseBtn.style.display = 'block';
+    }
   });
 
-  $( ".fa-play" ).click(function(){
-    if(!sound.playing())
-    {
-      sound.play();
+  if(!sound.playing())
+  {
+    sound.play();
+    var intervalSound = setInterval(function(){ timerSound() }, 1000);
+
+    function timerSound() {
+      if(parseFloat(Math.round( sound.seek() * 10 ) / 10).toFixed(0)>1)
+      {
+        $( '#sec' ).empty();
+        $( '#sec' ).append(parseFloat(Math.round( sound.seek() * 10 ) / 10).toFixed(0));
+      }
     }
+    timerSound();
+  }
+  $( ".fa-pause" ).click(function(){
+    sound.pause();
+  $( ".fa-play" ).click(function(){
+      if(!sound.playing())
+      {
+          sound.play();
+      }
+    });
   });
 }
 
@@ -206,4 +225,3 @@ function displayFunction()
   displayAlbum();
   displaySongs();
 }
-
