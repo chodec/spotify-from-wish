@@ -1,10 +1,11 @@
-var urlAuthor = "http://localhost/apicko/api.php?action=get_author";
-var urlAuthorSongs = "http://localhost/apicko/api.php?action=get_author_songs&author=";
-var urlSongInfo = "http://localhost/apicko/api.php?action=get_song_info&song=";
-var urlAllSongs = "http://localhost/apicko/api.php?action=get_all_songs";
-var urlAlbum = "http://localhost/apicko/api.php?action=get_album";
-var urlAlbumSongs = "http://localhost/apicko/api.php?action=get_album_songs&album=";
-var urlAuthorAlbums = "http://localhost/apicko/api.php?action=get_author_albums&author=";
+var urlBasic = "http://localhost/apicko/";
+var urlAuthor = urlBasic + "api.php?action=get_author";
+var urlAuthorSongs = urlBasic + "api.php?action=get_author_songs&author=";
+var urlSongInfo = urlBasic + "api.php?action=get_song_info&song=";
+var urlAllSongs = urlBasic + "api.php?action=get_all_songs";
+var urlAlbum = urlBasic + "api.php?action=get_album";
+var urlAlbumSongs = urlBasic + "api.php?action=get_album_songs&album=";
+var urlAuthorAlbums = urlBasic + "api.php?action=get_author_albums&author=";
 var tmpUrlAuthor = "";
 var tmpUrlAuthorSongs = "";
 var tmpUrlSongInfo = "";
@@ -180,11 +181,35 @@ function displayFooter(){
 
 function playSong(playtime)
 {
+  var songProgress = {
+  	formatTime: function (secs) {
+  		var minutes = Math.floor(secs / 60) || 0;
+  		var seconds = (secs - minutes * 60) || 0;
+  		return minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
+  	},
+  	updateTimeTracker: function () {
+  		var self = this;
+  		var seek = sound.seek() || 0;
+  		var currentTime = songProgress.formatTime(Math.round(seek));
+
+  		$('#timer').text(currentTime);
+  		$( '#myRange' ).val(sound.seek());
+
+  		if (self.playing()) {
+  			requestAnimationFrame(songProgress.updateTimeTracker.bind(self));
+      }
+  	}
+  };
 
   var sound = new Howl({
     src: ['../apicko/music/' + playtime],
     volume: 0.05,
     onplay: function(){
+      var time = Math.round(sound.duration());
+      $( '#myRange' ).attr({max:sound.duration()});
+      $( '#duration' ).html(songProgress.formatTime(time));
+      $( '#myRange' ).val(sound.seek());
+      requestAnimationFrame(songProgress.updateTimeTracker.bind(this));
       playBtn.style.display = 'block';
       pauseBtn.style.display = 'none';
     },
@@ -197,17 +222,17 @@ function playSong(playtime)
   if(!sound.playing())
   {
     sound.play();
-    var intervalSound = setInterval(function(){ timerSound() }, 1000);
-
-    function timerSound() {
-      if(parseFloat(Math.round( sound.seek() * 10 ) / 10).toFixed(0)>1)
-      {
-        $( '#sec' ).empty();
-        $( '#sec' ).append(parseFloat(Math.round( sound.seek() * 10 ) / 10).toFixed(0));
-      }
-    }
-    timerSound();
   }
+  $( ".slider" ).mousedown(function(){
+    console.log("hi");
+    sound.pause();
+  });
+
+  $( ".slider" ).mouseup(function(){
+    sound.seek(getSliderVal());
+    sound.play();
+  })
+  
   $( ".fa-pause" ).click(function(){
     sound.pause();
   $( ".fa-play" ).click(function(){
@@ -218,6 +243,12 @@ function playSong(playtime)
     });
   });
 }
+
+function getSliderVal()
+{
+  return $( '#myRange' ).val();
+}
+
 
 function displayFunction()
 {

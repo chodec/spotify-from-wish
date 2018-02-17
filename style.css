@@ -81,7 +81,7 @@ h1{
 .slider {
     -webkit-appearance: none;
     width: 100%;
-    height: 15px;
+    height: 10px;
     border-radius: 5px;
     background: #d3d3d3;
     outline: none;
@@ -90,6 +90,19 @@ h1{
     transition: opacity .2s;
 }
 
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background: #00ccff;
+    cursor: pointer;
+    visibility: hidden;
+}
+.slider:hover::-webkit-slider-thumb{
+  visibility: visible;
+}
 .slider:hover {
     opacity: 1;
 }
