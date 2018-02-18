@@ -15,6 +15,8 @@ var tmpUrlAlbumSongs = "";
 var tmpUrlAuthorAlbums = "";
 
 var playtime = "default";
+var warning = 0;
+var appendClass = "";
 var currentSong = "";
 var currentAuthor = "";
 var currentImg = "";
@@ -148,7 +150,11 @@ function displaySongs()
     $( "#display" ).append('<div class="displaySongs row">');
     $.getJSON(urlAllSongs,function(json){
       $.each(json,function(i, item){
-        $( ".displaySongs" ).append('<div class="col-md"><span class="songClass" id="'+ json[i].name + '">' + json[i].real_name + '</span> </div>')
+        appendClass = '';
+        appendClass = json[i].name;
+        $( ".displaySongs" ).append('<div class="col-lg-12"><span class="songClass" id="' + json[i].name + '">'
+          + [i+1] + '. ' + json[i].real_author + '</span>' + createDropdownMenu(appendClass) + '<br> <span class="authorDescription">by: '
+            + json[i].real_author + '</span> </div>')
       });
       $( ".songClass" ).click(function(){
         tmpUrlSongInfo = $(this).attr( "id" );
@@ -224,7 +230,6 @@ function playSong(playtime)
     sound.play();
   }
   $( ".slider" ).mousedown(function(){
-    console.log("hi");
     sound.pause();
   });
 
@@ -232,7 +237,7 @@ function playSong(playtime)
     sound.seek(getSliderVal());
     sound.play();
   })
-  
+
   $( ".fa-pause" ).click(function(){
     sound.pause();
   $( ".fa-play" ).click(function(){
@@ -249,6 +254,20 @@ function getSliderVal()
   return $( '#myRange' ).val();
 }
 
+function createDropdownMenu(appendClass)
+{
+  $("#"+appendClass).append('<div class="dropdown">');
+  $(".dropdown").append('<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">');
+  $("#dropdownMenu2").append('<span class="navbar-toggler-icon"></span>');
+  $( ".dropdown" ).append('<div class="dropdown-menu" aria-labelledby="dropdownMenu2">');
+  $( ".dropdown-menu" ).append('<button class="dropdown-item" type="button">Přidej do playlistu</button>');
+  $( ".dropdown-menu" ).append('<button class="dropdown-item" type="button">Neco</button>');
+}
+
+function messageBox(warning)
+{
+
+}
 
 function displayFunction()
 {
