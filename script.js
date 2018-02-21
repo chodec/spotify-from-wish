@@ -24,8 +24,12 @@ var currentImg = "";
 $(document).ready(function(){
   $( ".footer" ).hide();
   displayFunction();
+  console.log(getSliderVolVal());
   $( "#takeMeBack" ).click(function(){
     takeMeBack();
+  });
+  $(".fa-home").click(function(){
+      takeMeBack();
   });
 });
 
@@ -131,8 +135,9 @@ function displayAlbumSongs()
   $( "#display" ).empty();
   $.getJSON(urlAlbumSongs + tmpUrlAlbumSongs,function(json){
     tmpUrlAlbumSongs = "";
+    $("#display").append('<ul class="list-unstyled">')
     $.each(json, function(i, item){
-      $("#display").append('<span class="songClass" id="' + json[i].name + '">' + json[i].real_name + '</span>' + '<br>');
+      $(".list-unstyled").append('<li><span class="songClass" id="' + json[i].name + '">' + [i+1] +". " + json[i].real_name + '</span></li>' + '<br>');
     });
 
     $( ".songClass" ).click(function(){
@@ -148,14 +153,14 @@ function displaySongs()
   $( "#h3song" ).click(function(){
     $( "#display" ).empty();
     $( "#display" ).append('<div class="displaySongs row">');
+    $(".displaySongs").append('<ul class="list-unstyled col-lg-12">');
     $.getJSON(urlAllSongs,function(json){
       $.each(json,function(i, item){
-        appendClass = '';
-        appendClass = json[i].name;
-        $( ".displaySongs" ).append('<div class="col-lg-12"><span class="songClass" id="' + json[i].name + '">'
-          + [i+1] + '. ' + json[i].real_author + '</span>' + createDropdownMenu(appendClass) + '<br> <span class="authorDescription">by: '
-            + json[i].real_author + '</span> </div>')
+        $( ".list-unstyled" ).append('<li><span class="songClass" id="' + json[i].name + '">'
+          + [i+1] + '. ' + json[i].real_name + '</span><br> <span class="authorDescription">by: '
+            + json[i].real_author + '<div class="dropdown"></div> </li> </span>')
       });
+      createDropdownMenu();
       $( ".songClass" ).click(function(){
         tmpUrlSongInfo = $(this).attr( "id" );
         displaySong();
@@ -209,7 +214,6 @@ function playSong(playtime)
 
   var sound = new Howl({
     src: ['../apicko/music/' + playtime],
-    volume: 0.05,
     onplay: function(){
       var time = Math.round(sound.duration());
       $( '#myRange' ).attr({max:sound.duration()});
@@ -222,6 +226,13 @@ function playSong(playtime)
     onpause: function(){
       playBtn.style.display = 'none';
       pauseBtn.style.display = 'block';
+    },
+    onload: function(){
+      $(".messageBoxInfo").hide();
+      $(".messageBoxInfo").fadeIn(1500, messageBox(1));
+      $(".messageBoxInfo").fadeOut(2000, function(){
+        $(".messageBoxInfo").empty();
+      });
     }
   });
 
@@ -229,14 +240,34 @@ function playSong(playtime)
   {
     sound.play();
   }
-  $( ".slider" ).mousedown(function(){
+  $( ".sliderPos" ).mousedown(function(){
     sound.pause();
   });
 
-  $( ".slider" ).mouseup(function(){
-    sound.seek(getSliderVal());
+  $( ".sliderPos" ).mouseup(function(){
+    sound.seek(getSliderPosVal());
     sound.play();
   })
+  var tmpVol = getSliderVolVal()/100;
+  sound.volume(tmpVol);
+  if(getSliderVolVal() > 1.5)
+  {
+    lowSound.style.display = 'none';
+    noSound.style.display = 'none';
+    highSound.style.display = 'block';
+  }
+  else if(getSliderVolVal() === 0)
+  {
+    lowSound.style.display = 'block';
+    noSound.style.display = 'none';
+    highSound.style.display = 'none';
+  }
+  else if(getSliderVolVal()>0 && getSliderVolVal()<1.5)
+  {
+    lowSound.style.display = 'none';
+    noSound.style.display = 'block';
+    highSound.style.display = 'none';
+  }
 
   $( ".fa-pause" ).click(function(){
     sound.pause();
@@ -249,24 +280,39 @@ function playSong(playtime)
   });
 }
 
-function getSliderVal()
+function getSliderPosVal()
 {
   return $( '#myRange' ).val();
 }
 
-function createDropdownMenu(appendClass)
+function getSliderVolVal()
 {
-  $("#"+appendClass).append('<div class="dropdown">');
-  $(".dropdown").append('<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">');
-  $("#dropdownMenu2").append('<span class="navbar-toggler-icon"></span>');
-  $( ".dropdown" ).append('<div class="dropdown-menu" aria-labelledby="dropdownMenu2">');
-  $( ".dropdown-menu" ).append('<button class="dropdown-item" type="button">Přidej do playlistu</button>');
-  $( ".dropdown-menu" ).append('<button class="dropdown-item" type="button">Neco</button>');
+  return $( '#myRange2' ).val();
+}
+
+function createDropdownMenu()
+{
+  $(".dropdown").append('<button type="button" class="btn btn-secondary dropdown-toggle-split" id="dropdownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">');
+  $( ".btn-secondary" ).append("...");
+  $( ".dropdown" ).append('<div class="dropdown-menu" aria-labelledby="dropdownMenu">');
+  $( ".dropdown-menu" ).append('<a class="dropdown-item" href="#">Action</a>');
+  $( ".dropdown-menu" ).append('<a class="dropdown-item" href="#">Action</a>');
 }
 
 function messageBox(warning)
 {
+  switch (warning) {
+    case 1:
+        $(".messageBoxInfo").append('<div class="alert alert-success">');
+        $(".alert-success").append('<strong>Úspěch!</strong> Objekt písničky byl vytvořen!');
+      break;
+    case 2:
+        $(".messageBoxInfo").append('<div class="alert alert-warning">');
+        $(".alert-success").append('<strong>Ups!</strong> Něco se stalo špatně.');
+      break;
+    default:
 
+  }
 }
 
 function displayFunction()
