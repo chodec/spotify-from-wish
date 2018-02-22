@@ -16,6 +16,7 @@ var tmpUrlAuthorAlbums = "";
 
 var playtime = "default";
 var warning = 0;
+var tmpVol = 0;
 var appendClass = "";
 var currentSong = "";
 var currentAuthor = "";
@@ -24,7 +25,6 @@ var currentImg = "";
 $(document).ready(function(){
   $( ".footer" ).hide();
   displayFunction();
-  console.log(getSliderVolVal());
   $( "#takeMeBack" ).click(function(){
     takeMeBack();
   });
@@ -220,12 +220,12 @@ function playSong(playtime)
       $( '#duration' ).html(songProgress.formatTime(time));
       $( '#myRange' ).val(sound.seek());
       requestAnimationFrame(songProgress.updateTimeTracker.bind(this));
-      playBtn.style.display = 'block';
+      playBtn.style.display = 'inline-block';
       pauseBtn.style.display = 'none';
     },
     onpause: function(){
       playBtn.style.display = 'none';
-      pauseBtn.style.display = 'block';
+      pauseBtn.style.display = 'inline-block';
     },
     onload: function(){
       $(".messageBoxInfo").hide();
@@ -233,6 +233,26 @@ function playSong(playtime)
       $(".messageBoxInfo").fadeOut(2000, function(){
         $(".messageBoxInfo").empty();
       });
+    },
+    onvolume: function(){
+      if(getSliderVolVal() > 65)
+      {
+        lowSound.style.display = 'none';
+        noSound.style.display = 'none';
+        highSound.style.display = 'inline-block';
+      }
+      else if(getSliderVolVal() === 0)
+      {
+        lowSound.style.display = 'none';
+        noSound.style.display = 'inline-block';
+        highSound.style.display = 'none';
+      }
+      else if(getSliderVolVal() > 0 && getSliderVolVal() < 65)
+      {
+        lowSound.style.display = 'inline-block';
+        noSound.style.display = 'none';
+        highSound.style.display = 'none';
+      }
     }
   });
 
@@ -240,6 +260,7 @@ function playSong(playtime)
   {
     sound.play();
   }
+
   $( ".sliderPos" ).mousedown(function(){
     sound.pause();
   });
@@ -247,27 +268,15 @@ function playSong(playtime)
   $( ".sliderPos" ).mouseup(function(){
     sound.seek(getSliderPosVal());
     sound.play();
-  })
-  var tmpVol = getSliderVolVal()/100;
-  sound.volume(tmpVol);
-  if(getSliderVolVal() > 1.5)
-  {
-    lowSound.style.display = 'none';
-    noSound.style.display = 'none';
-    highSound.style.display = 'block';
-  }
-  else if(getSliderVolVal() === 0)
-  {
-    lowSound.style.display = 'block';
-    noSound.style.display = 'none';
-    highSound.style.display = 'none';
-  }
-  else if(getSliderVolVal()>0 && getSliderVolVal()<1.5)
-  {
-    lowSound.style.display = 'none';
-    noSound.style.display = 'block';
-    highSound.style.display = 'none';
-  }
+  });
+
+  $( ".sliderVol" ).mousedown(function(){
+    sound.volume(getSliderVolVal()/100);
+  });
+
+  $( ".sliderVol" ).mouseup(function(){
+    sound.volume(getSliderVolVal()/100);
+  });
 
   $( ".fa-pause" ).click(function(){
     sound.pause();

@@ -65,7 +65,7 @@
             <span class="songAuthor col-lg-3"></span>
             <br>
             <div class="playStop col-lg-1">
-            <i id="playBtn" class="fa fa-pause mr-1" style="display: block" aria-hidden="true"></i>
+            <i id="playBtn" class="fa fa-pause mr-1" style="display: inline-block" aria-hidden="true"></i>
             <i id="pauseBtn" class="fa fa-play mr-1" style="display: none" aria-hidden="true"></i>
             </div>
             <div class="everythingAboutSlider col-lg-12">
@@ -73,9 +73,9 @@
               <input type="range" min="1" max="100" value="1" class="sliderPos" id="myRange">
               <span id="duration">0:00</span>
               <i id="noSound" class="fa fa-volume-off" style="display: none" aria-hidden="true"></i>
-              <i id="lowSound" class="fa fa-volume-down" style="display: block" aria-hidden="true"></i>
+              <i id="lowSound" class="fa fa-volume-down" style="display: inline-block" aria-hidden="true"></i>
               <i id="highSound" class="fa fa-volume-up" style="display: none" aria-hidden="true"></i>
-              <input type="range" min="1" max="200" value="50" class="sliderVol" id="myRange2">
+              <input type="range" min="0" max="100" value="25" class="sliderVol" id="myRange2">
             </div>
           </div>
         </div>

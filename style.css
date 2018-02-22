@@ -212,3 +212,12 @@ li:hover{
   box-shadow: none;
   font-size: 10px;
 }
+.btn-secondary:not(:disabled):not(.disabled).active:focus, .btn-secondary:not(:disabled):not(.disabled):active:focus, .show>.btn-secondary.dropdown-toggle:focus{
+  box-shadow: none;
+}
+.btn-secondary.focus, .btn-secondary:focus{
+  box-shadow: none;
+}
+.btn-secondary:not(:disabled):not(.disabled).active, .btn-secondary:not(:disabled):not(.disabled):active, .show>.btn-secondary.dropdown-toggle{
+  background: none;
+}
