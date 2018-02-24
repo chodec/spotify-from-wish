@@ -21,23 +21,21 @@
     <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
       <a class="navbar-brand" href="#"><span class="navbar-brand fa fa-home"></span></a>
     </div>
+    <div class="messageBoxInfo"></div>
   </nav>
 
-  <div class="messageBoxInfo">
-
+  <div id="mySidenav" class="sidenav">
+  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+  <a href="#">About</a>
+  <a href="#">Services</a>
+  <a href="#">Clients</a>
+  <a href="#">Contact</a>
   </div>
-
-    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-      <a class="dropdown-item" href="#">Action</a>
-      <a class="dropdown-item" href="#">Another action</a>
-      <a class="dropdown-item" href="#">Something else here</a>
-    </div>
-  </div>
-
 
   <div class="jumbotron">
     <h1 id="takeMeBack">"audio streamer"<h1>
   </div>
+  <span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776;</span>
     <div class="container">
       <div id="display">
         <div class="displayMenu">
@@ -58,17 +56,18 @@
 
       <div class="footer">
         <div class="row">
-          <img  src="../apicko/img/photo.png" class="img-responsive col-lg-1">
-          <div class="col-lg-11">
-            <span class="songName col-lg-1"></span>
+          <div class="col-lg-10">
+            <span class="songName offset-lg-4 col-lg-1"></span>
             <br>
-            <span class="songAuthor col-lg-3"></span>
+            <span class="songAuthor offset-lg-4 col-lg-1"></span>
             <br>
-            <div class="playStop col-lg-1">
-            <i id="playBtn" class="fa fa-pause mr-1" style="display: inline-block" aria-hidden="true"></i>
-            <i id="pauseBtn" class="fa fa-play mr-1" style="display: none" aria-hidden="true"></i>
+            <div class="playStop offset-lg-5 col-lg-8 ">
+            <i id="leftBtn" class="fa fa-angle-double-left col-lg-1" aria-hidden="true"></i>
+            <i id="playBtn" class="fa fa-pause col-lg-1" style="display: none" aria-hidden="true"></i>
+            <i id="pauseBtn" class="fa fa-play col-lg-1" style="display: inline-block" aria-hidden="true"></i>
+            <i id="rightBtn" class="fa  fa-angle-double-right col-lg-1" aria-hidden="true"></i>
             </div>
-            <div class="everythingAboutSlider col-lg-12">
+            <div class="everythingAboutSlider offset-lg-4 col-lg-8">
               <span id="timer">0:00 </span>
               <input type="range" min="1" max="100" value="1" class="sliderPos" id="myRange">
               <span id="duration">0:00</span>
@@ -83,4 +82,13 @@
 
       <script type="text/javascript" src="../apicko/script.js"></script>
 </body>
+<script>
+function openNav() {
+    document.getElementById("mySidenav").style.width = "250px";
+}
+
+function closeNav() {
+    document.getElementById("mySidenav").style.width = "0";
+}
+</script>
 </html>

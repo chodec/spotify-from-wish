@@ -14,13 +14,38 @@ var tmpUrlAlbum = "";
 var tmpUrlAlbumSongs = "";
 var tmpUrlAuthorAlbums = "";
 
-var playtime = "default";
 var warning = 0;
-var tmpVol = 0;
+var soundIndex = 0;
+var currentIndex = 0;
+
+var playlist = [];
+
+var name = "";
+var path = "";
 var appendClass = "";
 var currentSong = "";
 var currentAuthor = "";
 var currentImg = "";
+
+var songProgress = {
+  formatTime: function (secs) {
+    var minutes = Math.floor(secs / 60) || 0;
+    var seconds = (secs - minutes * 60) || 0;
+    return minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
+  },
+  updateTimeTracker: function () {
+    var self = this;
+    var seek = window[name].seek() || 0;
+    var currentTime = songProgress.formatTime(Math.round(seek));
+
+    $('#timer').text(currentTime);
+    $( '#myRange' ).val(window[name].seek());
+
+    if (self.playing()) {
+      requestAnimationFrame(songProgress.updateTimeTracker.bind(self));
+    }
+  }
+};
 
 $(document).ready(function(){
   $( ".footer" ).hide();
@@ -31,6 +56,7 @@ $(document).ready(function(){
   $(".fa-home").click(function(){
       takeMeBack();
   });
+  addToQueue(path);
 });
 
 function displayAuthor()
@@ -88,21 +114,21 @@ function displaySong()
 {
   $( "#display" ).empty();
   $( "#display" ).append('<div class="setCenter">');
-  $( ".setCenter" ).append('<img src="../apicko/img/photo.png" class="imgClass"> <br>');
-
+  $( ".setCenter" ).append('<img src="../apicko/img/photo.png" class="img-responsive">');
   $.getJSON(urlSongInfo + tmpUrlSongInfo,function(json){
     $.each(json, function(i, item){
       tmpUrlSongInfo = "";
-      playtime = "";
-      playtime = json[i].name + '.mp3';
+      path = "";
+      path = json[i].name + '.mp3';
       currentSong = json[i].real_name;
       currentAuthor = json[i].real_author;
-      $( ".setCenter" ).append('<span class="songClassic" id="' + json[i].name + '">' +
-      json[i].real_name + '<br>' +  json[i].real_author + '</span>');
+      $( ".setCenter" ).append('<div><span class="songClassic" id="' + json[i].name + '">' +
+      json[i].real_name + '</span><br><span>' +  json[i].real_author + '</span></div>');
     });
     displayFooter();
     $( ".songClassic" ).click(function(){
-      playSong(playtime);
+      addToQueue(path)
+      playSong();
     });
   });
 }
@@ -157,14 +183,15 @@ function displaySongs()
     $.getJSON(urlAllSongs,function(json){
       $.each(json,function(i, item){
         $( ".list-unstyled" ).append('<li><span class="songClass" id="' + json[i].name + '">'
-          + [i+1] + '. ' + json[i].real_name + '</span><br> <span class="authorDescription">by: '
-            + json[i].real_author + '<div class="dropdown"></div> </li> </span>')
+          + [i+1] + '. ' + json[i].real_name + '</span> <br> <span class="authorDescription">by: '
+            + json[i].real_author + '<div class="dropdown" id="' + json[i].name + '"></div> </li> </span>');
       });
-      createDropdownMenu();
+
       $( ".songClass" ).click(function(){
         tmpUrlSongInfo = $(this).attr( "id" );
         displaySong();
       });
+
     });
   });
 }
@@ -190,35 +217,101 @@ function displayFooter(){
   });
 }
 
-function playSong(playtime)
+function playSong()
 {
-  var songProgress = {
-  	formatTime: function (secs) {
-  		var minutes = Math.floor(secs / 60) || 0;
-  		var seconds = (secs - minutes * 60) || 0;
-  		return minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
-  	},
-  	updateTimeTracker: function () {
-  		var self = this;
-  		var seek = sound.seek() || 0;
-  		var currentTime = songProgress.formatTime(Math.round(seek));
 
-  		$('#timer').text(currentTime);
-  		$( '#myRange' ).val(sound.seek());
+  for (var i = 0; i < playlist.length; i++) {
+    console.log(playlist[i]);
+  }
 
-  		if (self.playing()) {
-  			requestAnimationFrame(songProgress.updateTimeTracker.bind(self));
+  $( ".fa-play" ).click(function(){
+      if(!window[name].playing())
+      {
+          window[name].play();
       }
-  	}
-  };
+    });
 
-  var sound = new Howl({
-    src: ['../apicko/music/' + playtime],
+  $( ".sliderPos" ).mousedown(function(){
+    window[name].pause();
+  });
+
+  $( ".sliderPos" ).mouseup(function(){
+    window[name].seek(getSliderPosVal());
+    window[name].play();
+  });
+
+  $( ".sliderVol" ).mousedown(function(){
+    window[name].volume(getSliderVolVal()/100);
+  });
+
+  $( ".sliderVol" ).mouseup(function(){
+    window[name].volume(getSliderVolVal()/100);
+  });
+
+  $( ".fa-pause" ).click(function(){
+    window[name].pause();
+  $( ".fa-play" ).click(function(){
+      if(!window[name].playing())
+      {
+          window[name].play();
+      }
+    });
+  });
+}
+
+function getSliderPosVal()
+{
+  return $( '#myRange' ).val();
+}
+
+function getSliderVolVal()
+{
+  return $( '#myRange2' ).val();
+}
+
+function createDropdownMenu(id)
+{
+  $(".dropdown").append('<button type="button" class="btn btn-secondary dropdown-toggle-split" id="dropdownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">');
+  $( ".btn-secondary" ).append("&#9776;");
+  $( ".dropdown" ).append('<div class="dropdown-menu" aria-labelledby="dropdownMenu">');
+  $( ".dropdown-menu" ).append('<a class="dropdown-item" href="#">Přidat do fronty</a>');
+  $( ".dropdown-menu" ).append('<a class="dropdown-item" href="#">Přidat do playlistu</a>');
+}
+
+function messageBox(warning)
+{
+  switch (warning) {
+    case 1:
+        $(".messageBoxInfo").append('<div class="alert alert-success">');
+        $(".alert-success").append('<strong>Úspěch!</strong> Objekt byl úspěšně přidán do fronty!');
+      break;
+    case 2:
+        $(".messageBoxInfo").append('<div class="alert alert-warning">');
+        $(".alert-success").append('<strong>Ups!</strong> Něco se stalo špatně.');
+      break;
+      case 3:
+          $(".messageBoxInfo").append('<div class="alert alert-warning">');
+          $(".alert-success").append('<strong>Ups!</strong> Tvůj playlist právě dohrál.');
+        break;
+    default:
+
+  }
+}
+
+function addToQueue(path)
+{
+  soundIndex++;
+  playlist.push(soundIndex);
+
+  name = "sound" + soundIndex;
+
+    window[name] = new Howl({
+    src: ['../apicko/music/' + path],
     onplay: function(){
-      var time = Math.round(sound.duration());
-      $( '#myRange' ).attr({max:sound.duration()});
+      var time = Math.round(window[name].duration());
+      $( '#myRange' ).attr({max:window[name].duration()});
       $( '#duration' ).html(songProgress.formatTime(time));
-      $( '#myRange' ).val(sound.seek());
+      $( '#myRange' ).val(window[name].seek());
       requestAnimationFrame(songProgress.updateTimeTracker.bind(this));
       playBtn.style.display = 'inline-block';
       pauseBtn.style.display = 'none';
@@ -255,73 +348,6 @@ function playSong(playtime)
       }
     }
   });
-
-  if(!sound.playing())
-  {
-    sound.play();
-  }
-
-  $( ".sliderPos" ).mousedown(function(){
-    sound.pause();
-  });
-
-  $( ".sliderPos" ).mouseup(function(){
-    sound.seek(getSliderPosVal());
-    sound.play();
-  });
-
-  $( ".sliderVol" ).mousedown(function(){
-    sound.volume(getSliderVolVal()/100);
-  });
-
-  $( ".sliderVol" ).mouseup(function(){
-    sound.volume(getSliderVolVal()/100);
-  });
-
-  $( ".fa-pause" ).click(function(){
-    sound.pause();
-  $( ".fa-play" ).click(function(){
-      if(!sound.playing())
-      {
-          sound.play();
-      }
-    });
-  });
-}
-
-function getSliderPosVal()
-{
-  return $( '#myRange' ).val();
-}
-
-function getSliderVolVal()
-{
-  return $( '#myRange2' ).val();
-}
-
-function createDropdownMenu()
-{
-  $(".dropdown").append('<button type="button" class="btn btn-secondary dropdown-toggle-split" id="dropdownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">');
-  $( ".btn-secondary" ).append("...");
-  $( ".dropdown" ).append('<div class="dropdown-menu" aria-labelledby="dropdownMenu">');
-  $( ".dropdown-menu" ).append('<a class="dropdown-item" href="#">Action</a>');
-  $( ".dropdown-menu" ).append('<a class="dropdown-item" href="#">Action</a>');
-}
-
-function messageBox(warning)
-{
-  switch (warning) {
-    case 1:
-        $(".messageBoxInfo").append('<div class="alert alert-success">');
-        $(".alert-success").append('<strong>Úspěch!</strong> Objekt písničky byl vytvořen!');
-      break;
-    case 2:
-        $(".messageBoxInfo").append('<div class="alert alert-warning">');
-        $(".alert-success").append('<strong>Ups!</strong> Něco se stalo špatně.');
-      break;
-    default:
-
-  }
 }
 
 function displayFunction()
