@@ -26,10 +26,7 @@
 
   <div id="mySidenav" class="sidenav">
   <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-  <a href="#">About</a>
-  <a href="#">Services</a>
-  <a href="#">Clients</a>
-  <a href="#">Contact</a>
+  <a href="#">Fronta</a>
   </div>
 
   <div class="jumbotron">
@@ -63,8 +60,8 @@
             <br>
             <div class="playStop offset-lg-5 col-lg-8 ">
             <i id="leftBtn" class="fa fa-angle-double-left col-lg-1" aria-hidden="true"></i>
-            <i id="playBtn" class="fa fa-pause col-lg-1" style="display: none" aria-hidden="true"></i>
-            <i id="pauseBtn" class="fa fa-play col-lg-1" style="display: inline-block" aria-hidden="true"></i>
+            <i id="pauseBtn" class="fa fa-pause col-lg-1" style="display: none" aria-hidden="true"></i>
+            <i id="playBtn" class="fa fa-play col-lg-1" style="display: inline-block" aria-hidden="true"></i>
             <i id="rightBtn" class="fa  fa-angle-double-right col-lg-1" aria-hidden="true"></i>
             </div>
             <div class="everythingAboutSlider offset-lg-4 col-lg-8">

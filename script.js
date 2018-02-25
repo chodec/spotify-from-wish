@@ -20,6 +20,7 @@ var currentIndex = 0;
 
 var playlist = [];
 
+var id = "";
 var name = "";
 var path = "";
 var appendClass = "";
@@ -56,7 +57,7 @@ $(document).ready(function(){
   $(".fa-home").click(function(){
       takeMeBack();
   });
-  addToQueue(path);
+  playSong();
 });
 
 function displayAuthor()
@@ -125,10 +126,9 @@ function displaySong()
       $( ".setCenter" ).append('<div><span class="songClassic" id="' + json[i].name + '">' +
       json[i].real_name + '</span><br><span>' +  json[i].real_author + '</span></div>');
     });
-    displayFooter();
     $( ".songClassic" ).click(function(){
-      addToQueue(path)
-      playSong();
+      displayFooter();
+      addToQueue(path);
     });
   });
 }
@@ -182,14 +182,36 @@ function displaySongs()
     $(".displaySongs").append('<ul class="list-unstyled col-lg-12">');
     $.getJSON(urlAllSongs,function(json){
       $.each(json,function(i, item){
+        id = "";
         $( ".list-unstyled" ).append('<li><span class="songClass" id="' + json[i].name + '">'
-          + [i+1] + '. ' + json[i].real_name + '</span> <br> <span class="authorDescription">by: '
-            + json[i].real_author + '<div class="dropdown" id="' + json[i].name + '"></div> </li> </span>');
+          + [i+1] + '. ' + json[i].real_name + '</span> <div class="dropdown" id="' + json[i].name + '"></div> <br> <span class="authorDescription">by: '
+            + json[i].real_author + '</span></li>');
+        id = json[i].name;
+        createDropdownMenu(id);
       });
 
       $( ".songClass" ).click(function(){
         tmpUrlSongInfo = $(this).attr( "id" );
         displaySong();
+      });
+
+      $(".addToQueueClass").click(function(){
+        var tmpPath = $(this).attr( "id" );
+        path = tmpPath + '.mp3';
+        addToQueue(path);
+        displayFooter();
+        path = "";
+      });
+
+      $( ".playClass" ).click(function(){
+        var tmpCurrentSong = $(this).attr( "id" );
+        $.getJSON(urlSongInfo + tmpCurrentSong,function(json){
+          $.each(json, function(i, item){
+            currentSong = json[i].real_name;
+            currentAuthor = json[i].real_author;
+          });
+          displayFooter();
+        });
       });
 
     });
@@ -210,53 +232,59 @@ function takeMeBack()
   displayFunction();
 }
 function displayFooter(){
-  $( ".songClassic" ).click(function(){
-    $( ".footer" ).fadeIn(3000);
-    $( ".songName" ).text(currentSong);
-    $( ".songAuthor" ).text('by ' + currentAuthor);
-  });
+  $( ".footer" ).fadeIn(3000);
+  $( ".songName" ).text(currentSong);
+  $( ".songAuthor" ).text('by ' + currentAuthor);
+
 }
 
 function playSong()
 {
 
-  for (var i = 0; i < playlist.length; i++) {
-    console.log(playlist[i]);
-  }
+  currentIndex = name.match(/\d+/g);
 
-  $( ".fa-play" ).click(function(){
+  $(".fa-play").click(function(){
       if(!window[name].playing())
       {
           window[name].play();
       }
+      $(".fa-pause").click(function(){
+        window[name].pause();
+      $(".fa-play").click(function(){
+          if(!window[name].playing())
+          {
+              window[name].play();
+          }
+        });
+      });
     });
 
-  $( ".sliderPos" ).mousedown(function(){
-    window[name].pause();
+  $(".sliderPos").mousedown(function(){
+  window[name].pause();
   });
 
-  $( ".sliderPos" ).mouseup(function(){
+  $(".sliderPos").mouseup(function(){
     window[name].seek(getSliderPosVal());
     window[name].play();
   });
 
-  $( ".sliderVol" ).mousedown(function(){
+  $(".sliderVol").mousedown(function(){
     window[name].volume(getSliderVolVal()/100);
   });
 
-  $( ".sliderVol" ).mouseup(function(){
+  $(".sliderVol").mouseup(function(){
     window[name].volume(getSliderVolVal()/100);
   });
 
-  $( ".fa-pause" ).click(function(){
-    window[name].pause();
-  $( ".fa-play" ).click(function(){
-      if(!window[name].playing())
-      {
-          window[name].play();
-      }
-    });
+  $(".fa-angle-double-right").click(function(){
+    if(window[name].playing)
+    {
+      window[name].stop();
+    }
+    name = "sound" + eval("currentIndex + 1");
+    window[name].play();
   });
+
 }
 
 function getSliderPosVal()
@@ -271,11 +299,12 @@ function getSliderVolVal()
 
 function createDropdownMenu(id)
 {
-  $(".dropdown").append('<button type="button" class="btn btn-secondary dropdown-toggle-split" id="dropdownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">');
-  $( ".btn-secondary" ).append("&#9776;");
-  $( ".dropdown" ).append('<div class="dropdown-menu" aria-labelledby="dropdownMenu">');
-  $( ".dropdown-menu" ).append('<a class="dropdown-item" href="#">Přidat do fronty</a>');
-  $( ".dropdown-menu" ).append('<a class="dropdown-item" href="#">Přidat do playlistu</a>');
+  $( 'div#'+id ).append('<button type="button" class="btn btn-secondary dropdown-toggle-split ' + id +'" id="dropdownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">');
+  $( 'button.'+id ).append("&#9776;");
+  $( 'div#'+id ).append('<div class="dropdown-menu ' + id +'" aria-labelledby="dropdownMenu">');
+  $( 'div.'+id ).append('<span class="dropdown-item addToQueueClass" id=' + id +'>Přidat do fronty</span>');
+  $( 'div.'+id ).append('<span class="dropdown-item" id=' + id +'>Přidat do playlistu</span>');
+  $( 'div.'+id ).append('<span class="dropdown-item playClass" id=' + id +'>Přehrát!</span>');
 }
 
 function messageBox(warning)
@@ -300,7 +329,10 @@ function messageBox(warning)
 
 function addToQueue(path)
 {
-  soundIndex++;
+  if(soundIndex>=1)
+  {
+    soundIndex++;
+  }
   playlist.push(soundIndex);
 
   name = "sound" + soundIndex;
@@ -313,12 +345,12 @@ function addToQueue(path)
       $( '#duration' ).html(songProgress.formatTime(time));
       $( '#myRange' ).val(window[name].seek());
       requestAnimationFrame(songProgress.updateTimeTracker.bind(this));
-      playBtn.style.display = 'inline-block';
-      pauseBtn.style.display = 'none';
-    },
-    onpause: function(){
       playBtn.style.display = 'none';
       pauseBtn.style.display = 'inline-block';
+    },
+    onpause: function(){
+      playBtn.style.display = 'inline-block';
+      pauseBtn.style.display = 'none';
     },
     onload: function(){
       $(".messageBoxInfo").hide();
