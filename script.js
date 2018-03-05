@@ -16,13 +16,14 @@ var tmpUrlAuthorAlbums = "";
 
 var warning = 0;
 var soundIndex = 0;
-var currentIndex = 0;
+var currentIndex = 1;
 
 var playlist = [];
 
 var id = "";
 var name = "";
 var path = "";
+var displayName = "";
 var appendClass = "";
 var currentSong = "";
 var currentAuthor = "";
@@ -55,7 +56,7 @@ $(document).ready(function(){
     takeMeBack();
   });
   $(".fa-home").click(function(){
-      takeMeBack();
+    takeMeBack();
   });
   playSong();
 });
@@ -121,6 +122,8 @@ function displaySong()
       tmpUrlSongInfo = "";
       path = "";
       path = json[i].name + '.mp3';
+      displayName = "";
+      displayName = json[i].real_name;
       currentSong = json[i].real_name;
       currentAuthor = json[i].real_author;
       $( ".setCenter" ).append('<div><span class="songClassic" id="' + json[i].name + '">' +
@@ -128,7 +131,7 @@ function displaySong()
     });
     $( ".songClassic" ).click(function(){
       displayFooter();
-      addToQueue(path);
+      addToQueue(path, displayName);
     });
   });
 }
@@ -184,8 +187,8 @@ function displaySongs()
       $.each(json,function(i, item){
         id = "";
         $( ".list-unstyled" ).append('<li><span class="songClass" id="' + json[i].name + '">'
-          + [i+1] + '. ' + json[i].real_name + '</span> <div class="dropdown" id="' + json[i].name + '"></div> <br> <span class="authorDescription">by: '
-            + json[i].real_author + '</span></li>');
+        + [i+1] + '. ' + json[i].real_name + '</span> <div class="dropdown" id="' + json[i].name + '"></div> <br> <span class="authorDescription">by: '
+        + json[i].real_author + '</span></li>');
         id = json[i].name;
         createDropdownMenu(id);
       });
@@ -196,24 +199,35 @@ function displaySongs()
       });
 
       $(".addToQueueClass").click(function(){
-        var tmpPath = $(this).attr( "id" );
-        path = tmpPath + '.mp3';
-        addToQueue(path);
-        displayFooter();
+        displayName = "";
         path = "";
-      });
-
-      $( ".playClass" ).click(function(){
         var tmpCurrentSong = $(this).attr( "id" );
         $.getJSON(urlSongInfo + tmpCurrentSong,function(json){
           $.each(json, function(i, item){
             currentSong = json[i].real_name;
             currentAuthor = json[i].real_author;
+            path = json[i].name + '.mp3';
+            displayName = currentSong;
           });
+        addToQueue(path,displayName);
+        displayFooter();
+        });
+      });
+      $( ".playClass" ).click(function(){
+        displayName = "";
+        path = "";
+        var tmpCurrentSong = $(this).attr( "id" );
+        $.getJSON(urlSongInfo + tmpCurrentSong,function(json){
+          $.each(json, function(i, item){
+            currentSong = json[i].real_name;
+            currentAuthor = json[i].real_author;
+            path = json[i].name + '.mp3';
+            displayName = currentSong;
+          });
+          addToQueue(path,displayName);
           displayFooter();
         });
       });
-
     });
   });
 }
@@ -231,6 +245,7 @@ function takeMeBack()
 
   displayFunction();
 }
+
 function displayFooter(){
   $( ".footer" ).fadeIn(3000);
   $( ".songName" ).text(currentSong);
@@ -240,27 +255,28 @@ function displayFooter(){
 
 function playSong()
 {
-
-  currentIndex = name.match(/\d+/g);
-
   $(".fa-play").click(function(){
-      if(!window[name].playing())
-      {
-          window[name].play();
-      }
-      $(".fa-pause").click(function(){
-        window[name].pause();
+    if(window[name] === null)
+    {
+      createSoundObj(currentIndex);
+    }
+    if(!window[name].playing())
+    {
+      window[name].play();
+    }
+    $(".fa-pause").click(function(){
+      window[name].pause();
       $(".fa-play").click(function(){
-          if(!window[name].playing())
-          {
-              window[name].play();
-          }
-        });
+        if(!window[name].playing())
+        {
+          window[name].play();
+        }
       });
     });
+  });
 
   $(".sliderPos").mousedown(function(){
-  window[name].pause();
+    window[name].pause();
   });
 
   $(".sliderPos").mouseup(function(){
@@ -277,7 +293,7 @@ function playSong()
   });
 
   $(".fa-angle-double-right").click(function(){
-    if(window[name].playing)
+    if(window[name].playing())
     {
       window[name].stop();
     }
@@ -299,7 +315,8 @@ function getSliderVolVal()
 
 function createDropdownMenu(id)
 {
-  $( 'div#'+id ).append('<button type="button" class="btn btn-secondary dropdown-toggle-split ' + id +'" id="dropdownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">');
+  $( 'div#'+id ).append('<button type="button" class="btn btn-secondary dropdown-toggle-split ' +
+    id +'" id="dropdownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">');
   $( 'button.'+id ).append("&#9776;");
   $( 'div#'+id ).append('<div class="dropdown-menu ' + id +'" aria-labelledby="dropdownMenu">');
   $( 'div.'+id ).append('<span class="dropdown-item addToQueueClass" id=' + id +'>Přidat do fronty</span>');
@@ -311,34 +328,36 @@ function messageBox(warning)
 {
   switch (warning) {
     case 1:
-        $(".messageBoxInfo").append('<div class="alert alert-success">');
-        $(".alert-success").append('<strong>Úspěch!</strong> Objekt byl úspěšně přidán do fronty!');
-      break;
+    $(".messageBoxInfo").append('<div class="alert alert-success">');
+    $(".alert-success").append('<strong>Úspěch!</strong> Objekt byl úspěšně přidán do fronty!');
+    break;
     case 2:
-        $(".messageBoxInfo").append('<div class="alert alert-warning">');
-        $(".alert-success").append('<strong>Ups!</strong> Něco se stalo špatně.');
-      break;
-      case 3:
-          $(".messageBoxInfo").append('<div class="alert alert-warning">');
-          $(".alert-success").append('<strong>Ups!</strong> Tvůj playlist právě dohrál.');
-        break;
+    $(".messageBoxInfo").append('<div class="alert alert-warning">');
+    $(".alert-success").append('<strong>Ups!</strong> Něco se stalo špatně.');
+    break;
+    case 3:
+    $(".messageBoxInfo").append('<div class="alert alert-warning">');
+    $(".alert-success").append('<strong>Ups!</strong> Tvůj playlist právě dohrál.');
+    break;
     default:
 
   }
 }
 
-function addToQueue(path)
+function addToQueue(path, displayName)
 {
-  if(soundIndex>=1)
-  {
-    soundIndex++;
-  }
-  playlist.push(soundIndex);
-
+  soundIndex++;
+  playlist.push([soundIndex,path,displayName]);
   name = "sound" + soundIndex;
+  window[name] = null;
+}
 
-    window[name] = new Howl({
-    src: ['../apicko/music/' + path],
+function createSoundObj(currentIndex)
+{
+  name = "sound" + currentIndex;
+  console.log(name + playlist[currentIndex-1][1]);
+  window[name] = new Howl({
+    src: ['../apicko/music/' + playlist[currentIndex-1][1]],
     onplay: function(){
       var time = Math.round(window[name].duration());
       $( '#myRange' ).attr({max:window[name].duration()});
@@ -380,6 +399,11 @@ function addToQueue(path)
       }
     }
   });
+}
+
+function destroySoundObj()
+{
+  window[name] = null;
 }
 
 function displayFunction()
