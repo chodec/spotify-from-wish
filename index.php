@@ -26,26 +26,26 @@
 
   <div id="mySidenav" class="sidenav">
   <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-  <a href="#">Fronta</a>
+  <a href="javascript:;">Fronta</a>
+  <div class="playlistClass"></div>
   </div>
 
   <div class="jumbotron">
     <h1 id="takeMeBack">"audio streamer"<h1>
   </div>
   <span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776;</span>
-    <div class="container">
-      <div id="display">
-        <div class="displayMenu">
-          <div class="row">
-            <div class="col-md">
-              <span id="h3author"> Interpreti </span>
-            </div>
-            <div class="col-md">
-              <span  id="h3album"> Alba </span>
-            </div>
+
+    <div class="container" id="display">
+      <div class="displayMenu">
+        <div class="row">
+          <div class="col-md">
+            <span id="h3author"> Interpreti </span>
+          </div>
+          <div class="col-md">
+            <span  id="h3album"> Alba </span>
+          </div>
             <div class="col-md">
               <span id="h3song"> Písničky </span>
-            </div>
           </div>
         </div>
       </div>

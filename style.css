@@ -1,5 +1,6 @@
 body{
   background-color: #1D1F21;
+  font: sans-serif;
 }
 
 span{
@@ -46,8 +47,6 @@ h3{
 
 .col-md{
   text-align: center;
-  height: 50px;
-  border: 1px solid black;
 }
 
 .col-md-6{
@@ -58,6 +57,9 @@ h3{
   position: relative;
 }
 
+#display{
+  margin-bottom: 123px;
+}
 .footer{
   border-top: 1px solid white;
   height: 125px;
@@ -256,4 +258,20 @@ li:hover{
 .dropdown-item:hover{
   color: white;
   background: #1d1f21e6;
+}
+.playlistClass{
+  padding-left: 35%;
+}
+.sidenav a:hover{
+  color: #00ccff;
+}
+.col-lg-4{
+  text-align: center;
+  font-size: 25px;
+}
+.img-responsive{
+  border: none;
+  width: 300px;
+  height: 300px;
+  transition: 1s;
 }
