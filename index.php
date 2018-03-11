@@ -53,18 +53,18 @@
 
       <div class="footer">
         <div class="row">
-          <div class="col-lg-10">
-            <span class="songName offset-lg-4 col-lg-1"></span>
+          <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+            <span class="songName offset-xl-4 offset-lg-4 offset-md-2 offset-sm-0 col-lg-1 col-md-1 col-sm-12 col-12"></span>
             <br>
-            <span class="songAuthor offset-lg-4 col-lg-1"></span>
+            <span class="songAuthor offset-xl-4 offset-lg-4 offset-md-2 offset-sm-0 col-lg-1 col-md-1 col-sm-12 col-12"></span>
             <br>
-            <div class="playStop offset-lg-5 col-lg-8 ">
-            <i id="leftBtn" class="fa fa-angle-double-left col-lg-1" aria-hidden="true"></i>
-            <i id="pauseBtn" class="fa fa-pause col-lg-1" style="display: none" aria-hidden="true"></i>
-            <i id="playBtn" class="fa fa-play col-lg-1" style="display: inline-block" aria-hidden="true"></i>
-            <i id="rightBtn" class="fa  fa-angle-double-right col-lg-1" aria-hidden="true"></i>
+            <div class="playStop offset-xl-5 offset-lg-5 offset-md-3 offset-sm-1 col-xl-6 col-lg-8 col-md-5 col-sm-12 col-12">
+            <i id="leftBtn" class="fa fa-angle-double-left col-lg-1 col-md-1 col-sm-1 col-3" aria-hidden="true"></i>
+            <i id="pauseBtn" class="fa fa-pause col-lg-1 col-md-1 col-sm-1 col-3" style="display: none" aria-hidden="true"></i>
+            <i id="playBtn" class="fa fa-play col-lg-1 col-md-1 col-sm-1 col-3" style="display: inline-block" aria-hidden="true"></i>
+            <i id="rightBtn" class="fa  fa-angle-double-right col-lg-1 col-md-1 col-sm-1 col-3" aria-hidden="true"></i>
             </div>
-            <div class="everythingAboutSlider offset-lg-4 col-lg-8">
+            <div class="everythingAboutSlider offset-xl-4 offset-lg-4 offset-md-2 offset-sm-0 col-xl-6 col-lg-8 col-md-12 col-sm-12 col-12">
               <span id="timer">0:00 </span>
               <input type="range" min="1" max="100" value="1" class="sliderPos" id="myRange">
               <span id="duration">0:00</span>

@@ -125,10 +125,10 @@ function displaySong()
 {
   $( "#display" ).empty();
   $( "#display" ).append('<div class="setCenter">');
-  $( ".setCenter" ).append('<div class="row">');
-  $( ".row" ).append('<div class="col-lg-4"><img src="../apicko/img/photo.png" class="img-responsive"></div>');
+  $( ".setCenter" ).append('<div class="row imgDisplay">');
   $.getJSON(urlSongInfo + tmpUrlSongInfo,function(json){
     $.each(json, function(i, item){
+      $( ".imgDisplay" ).append('<div class="col-lg-4"><img src="../apicko/img/albums/' + json[i].album + '.jpg" class="img-responsive"></div>');
       tmpUrlSongInfo = "";
       path = "";
       path = json[i].name + '.mp3';
@@ -136,7 +136,7 @@ function displaySong()
       displayName = json[i].real_name;
       currentSong = json[i].real_name;
       currentAuthor = json[i].real_author;
-      $( ".row" ).append('<div class="col-lg-4>"><span class="songClassic" id="' + json[i].name + '">' +
+      $( ".imgDisplay" ).append('<div class="col-lg-4>"><span class="songClassic" id="' + json[i].name + '">' +
       json[i].real_name + '</span><br><span class="authorDescription"> by: ' +  json[i].real_author + '</span></div>');
     });
     $( ".songClassic" ).click(function(){
@@ -153,10 +153,11 @@ function displayAlbum()
     $( "#display" ).append('<div class="displayAlbum row">');
     $.getJSON(urlAlbum,function(json){
       $.each(json, function(i, item){
-        $( ".displayAlbum" ).append('<div class="col-md"><span  class="albumClass" id="' + json[i].name + '">' +
-        json[i].real_name + '</span> <br> by <span  class="authorClass" >' + json[i].real_author + '</span> </div>');
+        $( ".displayAlbum" ).append('<div class="col-lg-4"><span  class="albumClass" id="' + json[i].name + '">' +
+          json[i].real_name + '</span> <br><span  class="authorDescription" >by: ' + json[i].real_author +
+            '</span><div class="bandLogo"> <img class="img-responsive" src="../apicko/img/albums/'+ json[i].name +'.jpg"></div></div>');
       });
-      $( ".authorClass" ).click(function(){
+      $( ".authorDescription" ).click(function(){
         tmpUrlAuthorSongs += $(this).attr( "id" );
         tmpUrlAuthorAlbums += $(this).attr( "id" );
         displayAuthorSongsAndAlbums();
@@ -171,19 +172,60 @@ function displayAlbum()
 
 function displayAlbumSongs()
 {
+  var tmpAlbumImg= "";
+  var tmpAuthorName = "";
   $( "#display" ).empty();
+  $( "#display" ).append('<div class="displayAlbum row">');
+  $( ".displayAlbum" ).append('<div class="col-lg-12 albumRowClass row">');
   $.getJSON(urlAlbumSongs + tmpUrlAlbumSongs,function(json){
-    tmpUrlAlbumSongs = "";
     $("#display").append('<ul class="list-unstyled">')
     $.each(json, function(i, item){
-      $(".list-unstyled").append('<li><span class="songClass" id="' + json[i].name + '">' + [i+1] +". " + json[i].real_name + '</span></li>' + '<br>');
+      id = "";
+      tmpAlbumImg = json[i].album;
+      tmpAuthorName = json[i].real_author;
+      tmpUrlAlbumSongs = "";
+      $(".list-unstyled").append('<li><span class="songClass" id="' + json[i].name + '">' + [i+1] +". " + json[i].real_name +
+        '</span>  <div class="dropdown" id="' + json[i].name + '"></div></li>' + '<br>');
+      id = json[i].name;
+      createDropdownMenu(id);
     });
+    $( ".albumRowClass" ).append('<div class="col-lg-4 bandLogo"> <img class="img-responsive" src="../apicko/img/albums/'+
+      tmpAlbumImg +'.jpg"></div> <div class="col-lg-4 description"> <span>' + tmpAuthorName + '</span> <br> </div>');
 
     $( ".songClass" ).click(function(){
       tmpUrlSongInfo = $(this).attr( "id" );
       displaySong();
     });
-
+    $(".addToQueueClass").click(function(){
+      displayName = "";
+      path = "";
+      var tmpCurrentSong = $(this).attr( "id" );
+      $.getJSON(urlSongInfo + tmpCurrentSong,function(json){
+        $.each(json, function(i, item){
+          currentSong = json[i].real_name;
+          currentAuthor = json[i].real_author;
+          path = json[i].name + '.mp3';
+          displayName = currentSong;
+        });
+      addToQueue(path,displayName);
+      displayFooter();
+      });
+    });
+    $( ".playClass" ).click(function(){
+      displayName = "";
+      path = "";
+      var tmpCurrentSong = $(this).attr( "id" );
+      $.getJSON(urlSongInfo + tmpCurrentSong,function(json){
+        $.each(json, function(i, item){
+          currentSong = json[i].real_name;
+          currentAuthor = json[i].real_author;
+          path = json[i].name + '.mp3';
+          displayName = currentSong;
+        });
+        addToQueue(path,displayName);
+        displayFooter();
+      });
+    });
   });
 }
 

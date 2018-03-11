@@ -93,8 +93,7 @@ h3{
   color: #00ccff;
 }
 
-@media screen and (-webkit-min-device-pixel-ratio:0) {
-    input[class$="sliderPos"] {
+input[class$="sliderPos"] {
       overflow: hidden;
       width: 45%;
       height: 7px;
@@ -119,10 +118,9 @@ h3{
       background: #00ccff;
       box-shadow: -400px 0 0 400px #00ccff;
     }
-}
 
-@media screen and (-webkit-min-device-pixel-ratio:0) {
-    input[class$="sliderVol"] {
+
+input[class$="sliderVol"] {
       overflow: hidden;
       width: 10%;
       height: 7px;
@@ -147,7 +145,7 @@ h3{
       background: #00ccff;
       box-shadow: -200px 0 0 200px #00ccff;
     }
-}
+
 
 .authorDescription{
   font-size: 12px;
@@ -274,4 +272,10 @@ li:hover{
   width: 300px;
   height: 300px;
   transition: 1s;
+}
+.bandLogo:hover{
+  opacity: .5;
+}
+.songClass{
+  padding-right: 15px;
 }
