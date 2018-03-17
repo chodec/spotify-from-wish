@@ -1,5 +1,4 @@
 <?php
-//react pro front-end https://tutorialzine.com/2014/07/5-practical-examples-for-learning-facebooks-react-framework
 $conn = mysqli_connect('localhost','root','root','api')  or die(mysql_error());
 
 function get_all_songs()
@@ -8,6 +7,47 @@ function get_all_songs()
   $myQuery = "SELECT * FROM songs";
   $result = $conn->query($myQuery);
   $array = mysqli_fetch_all($result,MYSQLI_ASSOC);
+  return $array;
+}
+function whisperer()
+{
+  if(isset($_GET["term"]))
+  {
+    global $conn;
+    $term = $_GET["term"];
+
+    $myQuery1 = "SELECT real_name AS label, 'album' as product FROM albums WHERE real_name LIKE '%$term%'";
+
+    $myQuery2 =  "SELECT real_name AS label, 'song' as product FROM songs WHERE real_name LIKE '%$term%'";
+
+    $myQuery3 =  "SELECT real_name AS label, 'autor' as product FROM author WHERE real_name LIKE '%$term%'";
+
+    $result1 = mysqli_query($conn,$myQuery1);
+    $result2 = mysqli_query($conn,$myQuery2);
+    $result3 = mysqli_query($conn,$myQuery3);
+
+    if(mysqli_num_rows($result1) == 0 && mysqli_num_rows($result1) == 0 && mysqli_num_rows($result3) == 0)
+    {
+      $array = array("id"=>404, "name"=>"Nemohli jsme najít výsledek.");
+    }
+
+    if(mysqli_num_rows($result1) != 0)
+    {
+      $array = mysqli_fetch_all($result1,MYSQLI_ASSOC);
+    }
+
+    if(mysqli_num_rows($result2) != 0)
+    {
+      $array = mysqli_fetch_all($result2,MYSQLI_ASSOC);
+    }
+
+    if(mysqli_num_rows($result3) != 0)
+    {
+      $array = mysqli_fetch_all($result3,MYSQLI_ASSOC);
+    }
+
+  }
+
   return $array;
 }
 
@@ -23,7 +63,7 @@ function get_author()
 
     if(mysqli_num_rows($result) == 0)
     {
-      $array = array("id"=>0, "name"=>"Autor neexistuje");
+      $array = array("id"=>404, "name"=>"Autor neexistuje");
     }
     else
     {
@@ -50,7 +90,7 @@ function get_album()
     $result = mysqli_query($conn,$myQuery);
     if(mysqli_num_rows($result) == 0)
     {
-      $array = array("id"=>0, "name"=>"Autor zatim nic nepridal");
+      $array = array("id"=>404, "name"=>"Autor zatim nic nepridal");
     }
     else
     {
@@ -76,7 +116,7 @@ function get_author_songs()
     $result = mysqli_query($conn,$myQuery);
     if(mysqli_num_rows($result) == 0)
     {
-      $array = array("id"=>0, "name"=>"Autor zatim nic nepridal");
+      $array = array("id"=>404, "name"=>"Autor zatim nic nepridal");
     }
     else
     {
@@ -95,7 +135,7 @@ function get_album_songs()
     $result = mysqli_query($conn,$myQuery);
     if(mysqli_num_rows($result) == 0)
     {
-      $array = array("id"=>0, "name"=>"Autor zatim nic nepridal");
+      $array = array("id"=>404, "name"=>"Autor zatim nic nepridal");
     }
     else
     {
@@ -114,7 +154,7 @@ function get_author_albums()
     $result = mysqli_query($conn,$myQuery);
     if(mysqli_num_rows($result) == 0)
     {
-      $array = array("id"=>0, "name"=>"Autor zatim nic nepridal");
+      $array = array("id"=>404, "name"=>"Autor zatim nic nepridal");
     }
     else
     {
@@ -131,7 +171,7 @@ function get_song_info()
   $result = mysqli_query($conn,$myQuery);
   if(mysqli_num_rows($result) == 0)
   {
-    $array = array("id"=>0, "name"=>"Autor zatim nic nepridal");
+    $array = array("id"=>404, "name"=>"Autor zatim nic nepridal");
   }
   else
   {
@@ -140,7 +180,7 @@ function get_song_info()
   return $array;
 }
 
-$url = array("get_all_songs", "get_author", "get_author_songs", "get_song_info", "get_album", "get_album_songs", "get_author_albums");
+$url = array("get_all_songs", "get_author", "get_author_songs", "get_song_info", "get_album", "get_album_songs", "get_author_albums", "whisperer");
 
 $value = "default";
 
@@ -175,6 +215,11 @@ if (isset($_GET["action"]) && in_array($_GET["action"], $url))
     case "get_author_albums":
     $value = get_author_albums();
     break;
+
+    case "whisperer":
+    $value = whisperer();
+    break;
+
   }
 
 }

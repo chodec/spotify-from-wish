@@ -6,6 +6,7 @@ var urlAllSongs = urlBasic + "api.php?action=get_all_songs";
 var urlAlbum = urlBasic + "api.php?action=get_album";
 var urlAlbumSongs = urlBasic + "api.php?action=get_album_songs&album=";
 var urlAuthorAlbums = urlBasic + "api.php?action=get_author_albums&author=";
+var urlWhisperer = urlBasic + "api.php?action=whisperer";
 var tmpUrlAuthor = "";
 var tmpUrlAuthorSongs = "";
 var tmpUrlSongInfo = "";
@@ -13,6 +14,7 @@ var tmpUrlAllSongs = "";
 var tmpUrlAlbum = "";
 var tmpUrlAlbumSongs = "";
 var tmpUrlAuthorAlbums = "";
+var tmpUrlWhisperer = "";
 
 var warning = 0;
 var soundIndex = -1;
@@ -61,6 +63,122 @@ $(document).ready(function(){
   playSong();
 });
 
+
+function whisper()
+{
+  var tmp = "";
+  $('#whisp').on('input',function(){
+    tmp = $("#whisp").val();
+  });
+
+  $( function() {
+     $.widget( "custom.catcomplete", $.ui.autocomplete, {
+       _create: function() {
+         this._super();
+         this.widget().menu( "option", "items", "> :not(.ui-autocomplete-category)" );
+       },
+       _renderMenu: function( ul, items ) {
+         var that = this,
+         currentCategory = "";
+         $.each( items, function( index, item ) {
+           var li;
+           if ( item.category != currentCategory ) {
+             ul.append( "<li class='ui-autocomplete-category'>" + item.category + "</li>" );
+             currentCategory = item.category;
+           }
+           li = that._renderItemData( ul, item );
+           if ( item.category ) {
+             li.attr( "aria-label", item.category + " : " + item.label );
+           }
+         });
+       }
+     });
+    });
+
+  $('#whisp').autocomplete({
+    source: urlWhisperer + tmp,
+    minLength: 1
+  });
+
+  $(".fa-search").click(function(){
+    $("#display").empty();
+    var tmpFind = "&term=";
+    tmpFind += $("#whisp").val();
+    tmpFind = tmpFind.toString().toLowerCase();
+    tmpFind = tmpFind.replace(/ /g, '_');
+    console.log(tmpFind);
+    var tmpAuthor = "";
+    var tmpSong = "";
+    var tmpAlbum = "";
+    var tmpAuthorC = 0;
+    var tmpSongC = 0;
+    var tmpAlbumC = 0;
+    $("#display").append('<div class="whispRow row">')
+    $(".whispRow ").append('<div class="authorWhisp col-xl-4"><h2>Autoři</h2></div>');
+    $(".whispRow ").append('<div class="albumWhisp col-xl-4"><h2>Alba</h2></div>');
+    $(".whispRow ").append('<div class="songWhisp col-xl-4"><h2>Písničky</h2></div>');
+    $.getJSON(urlWhisperer + tmpFind,function(json){
+      console.log("rip?M");
+      $.each(json, function(i, item){
+        if(json[i].product === 'autor')
+        {
+          tmpAuthorC++;
+          var tmpAuthor = "";
+          tmpAuthor = json[i].label;
+          tmpAuthor = json[i].label.toString().toLowerCase();
+          tmpAuthor = json[i].label.replace(/ /g, '_');
+          $(".authorWhisp").append('<span class="col-xl-12 authorClass" id="' + tmpAuthor + '">'+ json[i].label +'</span');
+        }
+        if(json[i].product === 'album')
+        {
+          tmpAlbumC++;
+          var tmpAlbum = "";
+          tmpAlbum = json[i].label;
+          tmpAlbum= json[i].label.toString().toLowerCase();
+          tmpAlbum= json[i].label.replace(/ /g, '_');
+          $(".albumWhisp").append('<span class="col-xl-12 albumClass" id="' + tmpAlbum + '">'+ json[i].label+'</span');
+        }
+        if(json[i].product === 'song')
+        {
+          tmpSongC++;
+          var tmpSong = "";
+          tmpSong = json[i].label;
+          tmpSong = json[i].label.toString().toLowerCase();
+          tmpSong = json[i].label.replace(/ /g, '_');
+          $(".songWhisp").append('<span class="col-xl-12 songClass" id="' + tmpSong + '">'+ json[i].label +'</span');
+        }
+      });
+      if(tmpAlbumC === 0);
+      {
+        $(".albumWhisp").remove();
+      }
+      if(tmpAuthorC === 0);
+      {
+        $(".authorWhisp").remove();
+      }
+      if(tmpsongC === 0);
+      {
+        $(".songWhisp").remove();
+      }
+      $( ".authorClass" ).click(function(){
+        tmpUrlAuthorSongs += $(this).attr( "id" );
+        tmpUrlAuthorAlbums += $(this).attr( "id" );
+        displayAuthorSongsAndAlbums();
+      });
+
+      $( ".albumClass" ).click(function(){
+        tmpUrlAlbumSongs += $(this).attr( "id" );
+        displayAlbumSongs();
+      });
+
+      $( ".songClass" ).click(function(){
+        tmpUrlSongInfo = $(this).attr( "id" );
+        displaySong();
+      });
+
+    });
+  });
+}
 function displayAuthor()
 {
   $( "#h3author" ).click(function(){
@@ -387,10 +505,10 @@ function playSong()
     {
       window[name].stop();
     }
-    if(tmpEnd[0] > currentIndex)
+    if(tmpStart[0][0] > currentIndex)
     {
       messageBox(6);
-      currentIndex = tmpEnd[0][0];
+      currentIndex = tmpStart[0][0];
       window[name].stop();
       destroySoundObj();
       createSoundObj(currentIndex);
@@ -577,6 +695,7 @@ function destroySoundObj()
 
 function displayFunction()
 {
+  whisper();
   displayAuthor();
   displayAlbum();
   displaySongs();

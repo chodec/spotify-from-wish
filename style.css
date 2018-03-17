@@ -6,6 +6,7 @@ body{
 span{
   color: white;
   margin: 0px;
+  cursor: pointer;
 }
 
 span:hover{
@@ -24,6 +25,7 @@ i:hover{
 h1{
   color:black;
   text-align: center;
+  cursor: pointer;
 }
 
 h3{
@@ -114,7 +116,7 @@ input[class$="sliderPos"] {
       width: 10px;
       -webkit-appearance: none;
       height: 10px;
-      cursor: ew-resize;
+      cursor: pointer;
       background: #00ccff;
       box-shadow: -400px 0 0 400px #00ccff;
     }
@@ -250,8 +252,19 @@ li:hover{
   font-size: 20px;
   font-weight: bold;
 }
+.fa-search{
+  margin: none;
+  cursor: pointer;
+}
+.fa-search:hover{
+  color: #00ccff;
+}
 .fa.col-lg-1{
   text-align: center;
+}
+.form-control{
+  margin-right: 10px;
+  border-radius: 0px;
 }
 .dropdown-item:hover{
   color: white;
@@ -278,4 +291,63 @@ li:hover{
 }
 .songClass{
   padding-right: 15px;
+}
+.ui-menu {
+        list-style:none;
+        padding: 10px;
+        margin: 0;
+        display:block;
+        width:227px;
+}
+.ui-menu .ui-menu {
+        margin-top: -3px;
+}
+.ui-menu .ui-menu-item {
+        margin:0;
+        padding: 0;
+        width: 200px;
+}
+.ui-menu .ui-menu-item a {
+        text-decoration:none;
+        display:block;
+        padding:.2em .4em;
+        line-height:1.5;
+        zoom:1;
+}
+.ui-menu .ui-menu-item a.ui-state-hover,
+.ui-menu .ui-menu-item a.ui-state-active {
+        margin: -1px;
+}
+div{
+  color: black;
+}
+.ui-autocomplete {
+  position:absolute;
+  cursor:pointer;
+  background: white;
+  color: black;
+  z-index:1001 !important
+}
+#whisp{
+  margin-top: 5px;
+  padding-left: 7px;
+  width: 250px;
+  height: 40px;
+  font-size: 20px;
+}
+.nav{
+  height: 70px;
+}
+.fa-search{
+  font-size: 30px;
+}
+.fa-search:hover{
+  color: #00ccff;
+}
+.ui-helper-hidden-accessible{
+  display:none;
+  z-index: -100;
+}
+.nav{
+  opacity: .1;
 }
