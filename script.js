@@ -106,7 +106,6 @@ function whisper()
     tmpFind += $("#whisp").val();
     tmpFind = tmpFind.toString().toLowerCase();
     tmpFind = tmpFind.replace(/ /g, '_');
-    console.log(tmpFind);
     var tmpAuthor = "";
     var tmpSong = "";
     var tmpAlbum = "";
@@ -118,7 +117,6 @@ function whisper()
     $(".whispRow ").append('<div class="albumWhisp col-xl-4"><h2>Alba</h2></div>');
     $(".whispRow ").append('<div class="songWhisp col-xl-4"><h2>Písničky</h2></div>');
     $.getJSON(urlWhisperer + tmpFind,function(json){
-      console.log("rip?M");
       $.each(json, function(i, item){
         if(json[i].product === 'autor')
         {
@@ -148,18 +146,6 @@ function whisper()
           $(".songWhisp").append('<span class="col-xl-12 songClass" id="' + tmpSong + '">'+ json[i].label +'</span');
         }
       });
-      if(tmpAlbumC === 0);
-      {
-        $(".albumWhisp").remove();
-      }
-      if(tmpAuthorC === 0);
-      {
-        $(".authorWhisp").remove();
-      }
-      if(tmpsongC === 0);
-      {
-        $(".songWhisp").remove();
-      }
       $( ".authorClass" ).click(function(){
         tmpUrlAuthorSongs += $(this).attr( "id" );
         tmpUrlAuthorAlbums += $(this).attr( "id" );
@@ -175,7 +161,6 @@ function whisper()
         tmpUrlSongInfo = $(this).attr( "id" );
         displaySong();
       });
-
     });
   });
 }

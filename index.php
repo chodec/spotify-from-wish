@@ -1,3 +1,10 @@
+<?php
+session_start();
+if(!isset($_SESSION["email"]))
+{
+     header("location:login.php");
+}
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -25,6 +32,7 @@
       <input id="whisp" placeholder="Hledej ...">
       <label for="whisp"><span class="navbar-brand fa fa-search"></span></label>
       </div>
+       <h2 class="session"> <?php echo $_SESSION["email"] ?> </h2>
     </div>
     <div class="messageBoxInfo"></div>
   </nav>

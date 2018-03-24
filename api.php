@@ -5,7 +5,7 @@ function get_all_songs()
 {
   global $conn;
   $myQuery = "SELECT * FROM songs";
-  $result = $conn->query($myQuery);
+  $result = mysqli_query($conn, $myQuery);
   $array = mysqli_fetch_all($result,MYSQLI_ASSOC);
   return $array;
 }
@@ -14,7 +14,8 @@ function whisperer()
   if(isset($_GET["term"]))
   {
     global $conn;
-    $term = $_GET["term"];
+    $unsafe_action = $_GET["term"];
+    $term = mysqli_real_escape_string($conn, $unsafe_action);
 
     $myQuery1 = "SELECT real_name AS label, 'album' as product FROM albums WHERE real_name LIKE '%$term%'";
 
@@ -28,7 +29,7 @@ function whisperer()
 
     if(mysqli_num_rows($result1) == 0 && mysqli_num_rows($result1) == 0 && mysqli_num_rows($result3) == 0)
     {
-      $array = array("id"=>404, "name"=>"Nemohli jsme najít výsledek.");
+      $array = array("id"=>404, "name"=>"Not found");
     }
 
     if(mysqli_num_rows($result1) != 0)
@@ -56,14 +57,16 @@ function get_author()
   if(isset($_GET["author"]))
   {
     global $conn;
-    $author = $_GET["author"];
+    $unsafe_action = $_GET["author"];
+    $author = mysqli_real_escape_string($conn, $unsafe_action);
+
     $myQuery = "SELECT * FROM author WHERE name = '$author'";
 
     $result = mysqli_query($conn,$myQuery);
 
     if(mysqli_num_rows($result) == 0)
     {
-      $array = array("id"=>404, "name"=>"Autor neexistuje");
+      $array = array("id"=>404, "name"=>"Not found");
     }
     else
     {
@@ -85,12 +88,14 @@ function get_album()
   if(isset($_GET["album"]))
   {
     global $conn;
-    $album = $_GET["album"];
+    $unsafe_action = $_GET["album"];
+    $album = mysqli_real_escape_string($conn, $unsafe_action);
+
     $myQuery = "SELECT * FROM albums WHERE name = '$album'";
     $result = mysqli_query($conn,$myQuery);
     if(mysqli_num_rows($result) == 0)
     {
-      $array = array("id"=>404, "name"=>"Autor zatim nic nepridal");
+      $array = array("id"=>404, "name"=>"Not found");
     }
     else
     {
@@ -111,12 +116,14 @@ function get_author_songs()
   if(isset($_GET["author"]))
   {
     global $conn;
-    $author = $_GET["author"];
+    $unsafe_action = $_GET["author"];
+    $author = mysqli_real_escape_string($conn, $unsafe_action);
+
     $myQuery = "SELECT * FROM songs WHERE author = '$author'";
     $result = mysqli_query($conn,$myQuery);
     if(mysqli_num_rows($result) == 0)
     {
-      $array = array("id"=>404, "name"=>"Autor zatim nic nepridal");
+      $array = array("id"=>404, "name"=>"Not found");
     }
     else
     {
@@ -130,12 +137,14 @@ function get_album_songs()
   if(isset($_GET["album"]))
   {
     global $conn;
-    $album = $_GET["album"];
+    $unsafe_action = $_GET["album"];
+    $album = mysqli_real_escape_string($conn, $unsafe_action);
+
     $myQuery = "SELECT * FROM songs WHERE album = '$album'";
     $result = mysqli_query($conn,$myQuery);
     if(mysqli_num_rows($result) == 0)
     {
-      $array = array("id"=>404, "name"=>"Autor zatim nic nepridal");
+      $array = array("id"=>404, "name"=>"Not found");
     }
     else
     {
@@ -149,12 +158,14 @@ function get_author_albums()
   if(isset($_GET["author"]))
   {
     global $conn;
-    $author = $_GET["author"];
+    $unsafe_action = $_GET["author"];
+    $author = mysqli_real_escape_string($conn, $unsafe_action);
+
     $myQuery = "SELECT * FROM albums WHERE author = '$author'";
     $result = mysqli_query($conn,$myQuery);
     if(mysqli_num_rows($result) == 0)
     {
-      $array = array("id"=>404, "name"=>"Autor zatim nic nepridal");
+      $array = array("id"=>404, "name"=>"Not found");
     }
     else
     {
@@ -166,12 +177,14 @@ function get_author_albums()
 function get_song_info()
 {
   global $conn;
-  $song = $_GET["song"];
+  $unsafe_action = $_GET["song"];
+  $song = mysqli_real_escape_string($conn, $unsafe_action);
+
   $myQuery ="SELECT * FROM  songs WHERE name = '$song'";
   $result = mysqli_query($conn,$myQuery);
   if(mysqli_num_rows($result) == 0)
   {
-    $array = array("id"=>404, "name"=>"Autor zatim nic nepridal");
+    $array = array("id"=>404, "name"=>"Not found");
   }
   else
   {
@@ -186,7 +199,9 @@ $value = "default";
 
 if (isset($_GET["action"]) && in_array($_GET["action"], $url))
 {
-  switch ($_GET["action"])
+  $unsafe_action = $_GET["action"];
+  $action = mysqli_real_escape_string($conn, $unsafe_action);
+  switch ($action)
   {
     case "get_all_songs":
     $value = get_all_songs();

@@ -351,3 +351,19 @@ div{
 .nav{
   opacity: .1;
 }
+.form{
+  color: white;
+}
+.form h2{
+  text-align: center;
+}
+.form-horizontal{
+  padding-left: 25%;
+  padding-right: 15%;
+}
+.form-group .fa{
+  font-size: 25px;
+}
+.session{
+  float: right;
+}
