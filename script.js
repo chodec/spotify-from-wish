@@ -391,12 +391,15 @@ function takeMeBack()
 {
   $( "#display" ).empty();
   $( "#display" ).append('<div class="displayMenu row">');
-  $( ".displayMenu" ).append('<div class="col-md first">');
-  $( ".first" ).append('<span id="h3author"> Interpreti </span>');
-  $( ".displayMenu" ).append('<div class="col-md second">');
-  $( ".second" ).append('<span id="h3album"> Alba </span>');
-  $( ".displayMenu" ).append('<div class="col-md third">');
-  $( ".third" ).append('<span id="h3song"> Písničky </span>');
+  $( ".displayMenu" ).append('<div class="col-md first" id="h3author">');
+  $( ".first" ).append('<h4 class="service-heading text-center"><span class="fa fa-users" style="font-size:65px"></span></h4>');
+  $( ".first" ).append('<h2 class="section-heading">Interpreti</h2>');
+  $( ".displayMenu" ).append('<div class="col-md second" id="h3album">');
+  $( ".second" ).append('<h4 class="service-heading text-center"><span class="fa fa-headphones" style="font-size:65px"></span></h4>');
+  $( ".second" ).append('<h2 class="section-heading">Alba</h2>');
+  $( ".displayMenu" ).append('<div class="col-md third" id="h3song">');
+  $( ".third" ).append('<h4 class="service-heading text-center"><span class="fa fa-music" style="font-size:65px"></span></h4>');
+  $( ".third" ).append('<h2 class="section-heading">Skladby</h2>');
 
   displayFunction();
 }

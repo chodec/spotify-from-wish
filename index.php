@@ -2,14 +2,15 @@
 session_start();
 if(!isset($_SESSION["email"]))
 {
-     header("location:login.php");
+   header("location:login.php");
 }
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="cs">
 <head>
   <title>prehravac</title>
   <!--<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"> potřebuju jen u zubronetu-->
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
   <link rel="stylesheet" type="text/css" href="../apicko/style.css">
@@ -32,7 +33,7 @@ if(!isset($_SESSION["email"]))
       <input id="whisp" placeholder="Hledej ...">
       <label for="whisp"><span class="navbar-brand fa fa-search"></span></label>
       </div>
-       <h2 class="session"> <?php echo $_SESSION["email"] ?> </h2>
+       <h4 class="session"> <?php echo $_SESSION["email"] ?> </h4>
     </div>
     <div class="messageBoxInfo"></div>
   </nav>
@@ -44,22 +45,26 @@ if(!isset($_SESSION["email"]))
   </div>
 
   <div class="jumbotron">
-    <h1 id="takeMeBack">"audio streamer"<h1>
+    <div class="intro-heading text-uppercase" id="takeMeBack"> Přehrávač </div>
+    <hr>
   </div>
   <span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776;</span>
 
     <div class="container" id="display">
       <div class="displayMenu">
         <div class="row">
-          <div class="col-md">
-            <span id="h3author"> Interpreti </span>
+          <div class="col-md" id="h3author">
+            <h4 class="service-heading text-center"><span class="fa fa-users" style="font-size:65px"></span></h4>
+            <h2 class="section-heading" >Interpreti</h2>
           </div>
           <div class="col-md">
-            <span  id="h3album"> Alba </span>
+            <h4 class="service-heading text-center" id="h3album"><span class="fa fa-headphones" style="font-size:65px"></span></h4>
+            <h2 class="section-heading" >Alba</h2>
           </div>
             <div class="col-md">
-              <span id="h3song"> Písničky </span>
-          </div>
+              <h4 class="service-heading text-center" id="h3song"><span class="fa fa-music" style="font-size:65px"></span></h4>
+              <h2 class="section-heading" >Skladby</h2>
+            </div>
         </div>
       </div>
     </div>

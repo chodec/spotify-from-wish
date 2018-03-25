@@ -367,3 +367,47 @@ div{
 .session{
   float: right;
 }
+.mainBody.jumbotron{
+  height:350px;
+}
+.carousel-caption{
+  background: rgba(0, 0, 0, .8);
+}
+.section-heading{
+  color:white;
+}
+.service-heading{
+  color:white;
+}
+h3.section-subheading {
+  font-size: 16px;
+  font-weight: 400;
+  font-style: italic;
+  margin-bottom: 75px;
+  color: white;
+}
+footer{
+  margin-bottom: 50px;
+}
+.intro-heading{
+  font-size: 75px;
+  font-weight: 700;
+  line-height: 75px;
+  color: white;
+  text-align: center;
+  cursor: pointer;
+}
+hr{
+  max-width: 50px;
+    border-width: 3px;
+    border-color: #00ccff;
+}
+#h3song{
+  cursor:pointer;
+}
+#h3album{
+  cursor:pointer;
+}
+#h3author{
+  cursor:pointer;
+}
