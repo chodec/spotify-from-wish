@@ -1,2 +1,2 @@
 # music_api
-Pokus o rest api v php
+JavaScript music player with database and API in PHP
